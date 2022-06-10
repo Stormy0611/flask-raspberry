@@ -21,7 +21,7 @@ Buzzer = 17
 Volt_list = []
 Volt_read = []
 
-Graph_repeat=5
+Graph_repeat=120
 Read_repeat=5
 
 
