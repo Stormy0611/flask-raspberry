@@ -1,5 +1,5 @@
 {
-    "base_folder_path": "/home/pi/savvyvan",
+    "base_folder_path": "E:/ControlPanel_lite/savvyvan",
     "settings_page_text_file_path": "message.txt",
     "battery_file_path": "readings/voltage.txt",
     "battery_graph_file_path": "readings/voltage_graph.txt",
@@ -21,6 +21,7 @@
     "fine_tune": 0.2,
     "email": "SIMON@GMAIL.COM",
     "notification_file": "notification.txt",
+    "notification_file_modify_time": "Fri Jun 17 15:22:15 2022",
     "battery_types": [
         {
             "name": "AGM",
@@ -174,7 +175,7 @@
         "shade2_class": "darken-3"
     },
     "total_title_to_display": 6,
-    "geo_location_city": "TT",
+    "geo_location_city": "London",
     "weather_data": "{\"cod\": 401, \"message\": \"Invalid API key. Please see http://openweathermap.org/faq#error401 for more info.\"}",
     "weather_widget_display_status": "True",
     "tiles": [

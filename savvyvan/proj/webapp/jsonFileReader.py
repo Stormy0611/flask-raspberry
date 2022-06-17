@@ -376,13 +376,23 @@ class ConfigFileReader():
             return False
         
         return True
-    def getNotification(self):
+    def getNotificationFileModifyTime(self):
+        return self.data['notification_file_modify_time']
+
+    def setNotifcationFileModifyTime(self, mtime):
+        self.data['notification_file_modify_time'] = mtime
+        self.updateDataFile(self.data)
+
+    def getNotificationFilePath(self):
         notification_file_path = os.path.join(self.getBaseFolderPath(),  self.data['notification_file'])
         if not os.path.exists(notification_file_path):
             print("*** In-Valid notification_file_path")
+        return notification_file_path
+        
+    def getNotification(self):
+        notification_file_path = self.getNotificationFilePath()
         file = open(notification_file_path, "r")
         return file.read()
-
         # def getMenuFolderPath(self):
         #     menu_folder_path = os.path.join(self.getBaseFolderPath(),self.data['menu_folder_path'])
         # if not os.path.exists(menu_folder_path):
