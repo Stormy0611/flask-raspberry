@@ -8,10 +8,18 @@
         font-weight: bold !important;
     }
     .weather_info_unit_div{
-        border-left: 4px solid rgba(214, 214, 214, 0.637);
-        margin-left: 15px;
+        border-left: 3px solid rgba(214, 214, 214, 0.637);
+        margin-left: 10px;
         padding-left: 5px;
     }
+    .weather_info_unit_div > div {
+        display: flex;
+        align-items: center;
+    }
+    .weather_info_unit_div > div > img {
+       width: 60px;
+    }
+</style>
 </style>
 
 
@@ -71,39 +79,59 @@
     
       <div style="display: flex;flex-direction: row ; justify-content:space-around ;align-items: center;padding:5px 3%;margin:0px 7%;border-radius: 10px;" class="z-depth-2">
         <!-- Location -->
-      <div  class="weather_info_unit_div">
+        <div  class="weather_info_unit_div">
             <p>Location</p>
             <p id="weather_location">Loading...</p> 
         </div> 
         <div class="weather_info_unit_div">
             <p>Today</p>
-            <img id="weather_icon" class="circle" src="" alt="Loading... Weather Iocn">
-            <p id="weather_state1">Loading...</p>
-            <p id="temperature1">Loading...</p> 
+            <div>
+                <img id="weather_icon0" class="circle" src="" alt="Loading... Weather Iocn">           
+                <div>
+                    <p id="weather_state0">Loading...</p>
+                    <p id="temperature0">Loading...</p>
+                </div>
+            </div>
         </div>
         <div  class="weather_info_unit_div">
-            <p>Tomorrow</p>
-            <img id="weather_icon" class="circle" src="" alt="Loading... Weather Iocn">
-            <p id="weather_state2">Loading...</p>
-            <p id="temperature2">Loading...</p>  
+            <p id = "day_name1"></p>
+            <div>
+                <img id="weather_icon1" class="circle" src="" alt="Loading... Weather Iocn">
+                <div>
+                    <p id="weather_state1">Loading...</p>
+                    <p id="temperature1">Loading...</p>  
+                </div>    
+            </div>
         </div>
         <div  class="weather_info_unit_div">
-            <p id = "third"></p>
-            <img id="weather_icon" class="circle" src="" alt="Loading... Weather Iocn">
-            <p id="weather_state3">Loading...</p>
-            <p id="temperature3">Loading...</p>  
+            <p id = "day_name2"></p>
+            <div>
+                <img id="weather_icon2" class="circle" src="" alt="Loading... Weather Iocn">
+                <div>
+                    <p id="weather_state2">Loading...</p>
+                    <p id="temperature2">Loading...</p>
+                </div>  
+            </div>
         </div>
         <div  class="weather_info_unit_div">
-            <p id = "firth"></p>
-            <img id="weather_icon" class="circle" src="" alt="Loading... Weather Iocn">
-            <p id="weather_state4">Loading...</p>
-            <p id="temperature4">Loading...</p>  
+            <p id = "day_name3"></p>
+            <div>
+                <img id="weather_icon3" class="circle" src="" alt="Loading... Weather Iocn">
+                <div>
+                    <p id="weather_state3">Loading...</p>
+                    <p id="temperature3">Loading...</p>
+                </div>  
+            </div>
         </div>
         <div  class="weather_info_unit_div">
-            <p id = "fifth"></p>
-            <img id="weather_icon" class="circle" src="" alt="Loading... Weather Iocn">
-            <p id="weather_state5">Loading...</p>
-            <p id="temperature5">Loading...</p>  
+            <p id = "day_name4"></p>
+            <div>
+                <img id="weather_icon4" class="circle" src="" alt="Loading... Weather Iocn">
+                <div>
+                    <p id="weather_state4">Loading...</p>
+                    <p id="temperature4">Loading...</p>
+                </div>  
+            </div>
         </div>
     </div>
 </div>
@@ -129,30 +157,67 @@ $('#save_geo_location_city').click(function(){
 
 
 // var data = {{ data | tojson }};   
-// console.log('b');
+// console.log('b');0
 // console.log(data);
-
+const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            
 function updateWeatherWidget(res){ 
     console.log('updateWeatherWidget')
-    $('#weather_location').html(`${res.name}, ${res.sys.country}`);
-    $('#weather_icon').attr("src",`https://openweathermap.org/img/wn/${res.weather[0].icon}@2x.png`);
-    $('#weather_temperataure').html(`${res.main.temp} C`);
-    $('#weather_wind_speed').html(`${res.wind.speed} km/h`);
-    $('#weather_pressure').html(`${res.main.pressure} millibars`);
-    $('#weather_humidity').html(`${res.main.humidity} g/km`);
-    $('#weather_descriptions').html(`${res.weather[0].main}, ${res.weather[0].description}` );
+    $('#weather_location').html(`${res.city.name}, ${res.city.country}`);
+    var second_start_id = 0;
+    $('#weather_icon0').attr("src",`https://openweathermap.org/img/wn/${res.list[0].weather[0].icon}@2x.png`);
+    $('#weather_state0').html(`${res.list[0].weather[0].main}`);
+    var max = res.list[0].main.feels_like;
+    var min = max;
+    while(true) {
+        const d1 = new Date(res.list[second_start_id].dt * 1000)
+        const d2 = new Date(res.list[second_start_id + 1].dt * 1000)
+        if(d1.getDate() == d2.getDate())
+        {
+            max = Math.max(max, res.list[second_start_id].main.feels_like);
+            min = Math.min(min, res.list[second_start_id].main.feels_like);
+            second_start_id ++;
+            console.log(second_start_id)
+        }
+        else
+            break;
+    }
+    $('#temperature0').html(max + "C/" + min + "C");    
+    var itor = 0;
+    for(i = second_start_id; i < res.list.length; i += 8) {
+        itor ++;
+        const d = new Date(res.list[i].dt * 1000);
+        const dayName = days[d.getDay()];
+        $('#day_name' + itor).html(dayName);
+        $('#weather_icon' + itor).attr("src",`https://openweathermap.org/img/wn/${res.list[i + 4].weather[0].icon}@2x.png`);
+        $('#weather_state' + itor).html(`${res.list[i + 4].weather[0].main}`);
+        var max  = res.list[i].main.feels_like;
+        var min = max; 
+        for(j = i; j < i  + 8; j ++) {
+            max = Math.max(max, res.list[j].main.feels_like);
+            min = Math.min(min, res.list[j].main.feels_like);
+        }
+        $('#temperature' + itor).html(max + "C/" + min + "C");
+    }
+
+    
+    // $('#weather_temperataure').html(`${res.main.temp} C`);
+    // $('#weather_wind_speed').html(`${res.wind.speed} km/h`);
+    // $('#weather_pressure').html(`${res.main.pressure} millibars`);
+    // $('#weather_humidity').html(`${res.main.humidity} g/km`);
+    // $('#weather_descriptions').html(`${res.weather[0].main}, ${res.weather[0].description}` );
 }
 
 function getWeatherData(lat,long){
     console.log('getWeatherData');
-    console.log(lat);
-    console.log(long);
+    // console.log(lat);
+    // console.log(long);
     $.ajax({
         url:'/get_weather_data',
         success: function(weather_data){
             var res = weather_data.weather_data
+            console.log(res)
             updateWeatherWidget(res)
- 
         } 
     })
 
@@ -172,8 +237,7 @@ console.log('is_allowed: '+String(is_allowed))
 if(is_allowed!=null ){
     console.log('is_allowed not null')
     var latitude = localStorage.getItem('latitude')
-    var longitude = localStorage.getIt
-    +-+em('longitude') 
+    var longitude = localStorage.getItem('longitude')
     console.log('latitude: '+String(latitude)+' longitude: '+String(longitude))
     getWeatherData(latitude,longitude)
 }else{

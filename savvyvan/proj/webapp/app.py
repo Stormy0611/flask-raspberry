@@ -194,7 +194,7 @@ def wifi_settings_page():
     reader = ConfigFileReader() 
     data['menu_python_files'] = reader.getMenuPythonFiles()
     data['tile_colors'] = reader.getTilesBackgroundColorClasses()
-
+    data['notification'] = reader.getNotification()
     data['network_ssids'] = WPA_Supplicant_Reader().getNetworkSSID()
     data['display_external_link_icon'] = reader.display_external_link_icon()
     return render_template("wifi_settings.html",data = data)
