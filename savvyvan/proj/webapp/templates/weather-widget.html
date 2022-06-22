@@ -8,9 +8,9 @@
         font-weight: bold !important;
     }
     .weather_info_unit_div{
-        border-left: 3px solid rgba(214, 214, 214, 0.637);
-        margin-left: 10px;
-        padding-left: 5px;
+        border-left: 4px solid rgba(214, 214, 214, 0.637);
+        margin-left: 15px;
+        padding-left: 2px;
     }
     .weather_info_unit_div > div {
         display: flex;
@@ -170,21 +170,20 @@ function updateWeatherWidget(res){
     var max = res.list[0].main.feels_like;
     var min = max;
     while(true) {
+        second_start_id ++;
+        max = Math.max(max, res.list[second_start_id].main.feels_like);
+        min = Math.min(min, res.list[second_start_id].main.feels_like);
+        console.log(second_start_id)
         const d1 = new Date(res.list[second_start_id].dt * 1000)
         const d2 = new Date(res.list[second_start_id + 1].dt * 1000)
-        if(d1.getDate() == d2.getDate())
+        if(d1.getDate() != d2.getDate())
         {
-            max = Math.max(max, res.list[second_start_id].main.feels_like);
-            min = Math.min(min, res.list[second_start_id].main.feels_like);
-            second_start_id ++;
-            console.log(second_start_id)
-        }
-        else
             break;
+        }
     }
     $('#temperature0').html(max + "C/" + min + "C");    
     var itor = 0;
-    for(i = second_start_id; i < res.list.length; i += 8) {
+    for(i = second_start_id + 1; i < res.list.length; i += 8) {
         itor ++;
         const d = new Date(res.list[i].dt * 1000);
         const dayName = days[d.getDay()];
