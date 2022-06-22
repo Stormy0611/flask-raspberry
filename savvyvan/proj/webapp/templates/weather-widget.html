@@ -9,7 +9,7 @@
     }
     .weather_info_unit_div{
         border-left: 3px solid rgba(214, 214, 214, 0.637);
-        padding-left: 10px;
+        padding: 10px;
     }
     .weather_info_unit_div:first-child {
         border-left: 0px !important;
@@ -82,13 +82,13 @@
         }
       } -->
     
-      <div style="display: flex;flex-direction: row ; justify-content:space-around ;align-items: center;padding:5px 3%;margin:0px 7%;border-radius: 10px;" class="z-depth-2">
+      <div style="display: flex;flex-direction: row ; justify-content:space-around ;align-items: center;padding:5px 3%;" class="z-depth-2">
         <!-- Location -->
         <div  class="weather_info_unit_div">
             <p id="weather_location">Loading...</p> 
         </div> 
         <div class="weather_info_unit_div">
-            <p id = "day_name0"></p>
+            <p>Today</p>
             <div>
                 <img id="weather_icon0" class="circle" src="" alt="Loading... Weather Iocn">           
                 <div>
@@ -169,10 +169,10 @@ function updateWeatherWidget(res){
     console.log('updateWeatherWidget')
     $('#weather_location').html(`${res.city.name}, ${res.city.country}`);
     var second_start_id = 0;
-    const today = new Date(res.list[0].dt * 1000);
-    const today_date = today.getDate();
-    const today_month = month[today.getMonth()];
-    $('#day_name0').html("Today " + today_date + "-" +  today_month)                                                                       
+    // const today = new Date(res.list[0].dt * 1000);
+    // const today_date = today.getDate();
+    // const today_month = month[today.getMonth()];
+    // $('#day_name0').html("Today " + today_date + "-" +  today_month)                                                                       
     $('#weather_icon0').attr("src",`https://openweathermap.org/img/wn/${res.list[0].weather[0].icon}@2x.png`);
     $('#weather_state0').html(`${res.list[0].weather[0].main}`);
     var max = res.list[0].main.feels_like;
@@ -190,7 +190,7 @@ function updateWeatherWidget(res){
             break;
         }
     }
-    $('#temperature0').html(max.toFixed(0) + "C/" + min.toFixed(0) + "C");    
+    $('#temperature0').html(max.toFixed(0) + "C / " + min.toFixed(0) + "C");    
     var itor = 0;
     for(i = second_start_id + 1; i < res.list.length; i += 8) {
         itor ++;
@@ -207,7 +207,7 @@ function updateWeatherWidget(res){
             max = Math.max(max, res.list[j].main.feels_like);
             min = Math.min(min, res.list[j].main.feels_like);
         }
-        $('#temperature' + itor).html(max.toFixed(0) + "C/" + min.toFixed(0) + "C");
+        $('#temperature' + itor).html(max.toFixed(0) + "C / " + min.toFixed(0) + "C");
     }
 
     
