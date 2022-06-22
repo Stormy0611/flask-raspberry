@@ -340,6 +340,8 @@ class ConfigFileReader():
     
     def setBatteryType(self, current_index):
         self.data['current_battery_index'] = int(current_index)
+        voltalert_file_path = os.path.join(self.getBaseFolderPath(), self.data['voltalert_file_path'])
+        print(self.data['battery_types'][int(current_index)]["flash"], file=open(voltalert_file_path, "w"))
         self.updateDataFile(self.data)
 
     def getFineTune(self):
