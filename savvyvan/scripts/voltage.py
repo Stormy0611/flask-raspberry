@@ -21,7 +21,7 @@ Buzzer = 17
 Volt_list = []
 Volt_read = []
 
-Graph_repeat=5
+Graph_repeat=120
 Read_repeat=5
 
 
@@ -91,25 +91,25 @@ def main():
                                 time.sleep(1)
                          Voltage = statistics.mean(Volt_read) #store average of list
                          Voltage = float(Voltage)+float(volt_modifier)
-                         Voltage = (round(Voltage, 2)) #round to 1 decimal places
+                         Voltage = (round(Voltage, 1)) #round to 1 decimal places
                          Volt_read.clear() # clear list
                         
                          Volt_list.append(Voltage) 
                          now = datetime.now()
                          dt_string = now.strftime("%d/%m/%Y %H:%M")
                          print(str(dt_string) + str(' -> ')+ str(Voltage),file=open("../readings/voltage.txt", "w"))
-                         print(str(Voltage) + str(' now'))
+                         #print(str(Voltage) + str(' now'))
                         
                  Voltage_graph = statistics.mean(Volt_list)
                  Voltage_graph_round=(round(Voltage_graph, 2)) 
                  print(str(dt_string) + str(' -> ')+ str(Voltage_graph_round),file=open("../readings/voltage_graph.txt", "a"))
                  Volt_list.clear()
-                 print(Voltage_graph_round)
+                 #print(Voltage_graph_round)
                  
                  #Alert if voltage is between 1 and the alert value
                  with open('voltalert.txt') as f: #read the voltalert.txt file
                         alertvalue = float(f.read())
-                 print(alertvalue)
+                 #print(alertvalue)
 
                  is_between = 3 <= Voltage_graph_round <= alertvalue
                  Shall_Alert = is_between
