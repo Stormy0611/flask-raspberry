@@ -179,7 +179,7 @@ def title_page():
     data['weather_widget_display_status'] = reader.get_weather_widget_display_status()
     data['email_value'] = reader.getEmail()
     data['notification'] = reader.getNotification()
-    return render_template("/title.html", data = data)
+    return render_template("/optional.html", data = data)
 
 @app.route("/add_email")
 def add_email():
