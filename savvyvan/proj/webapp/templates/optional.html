@@ -55,7 +55,7 @@
         <!-- This is battery div -->
         <div class="left-align" style="margin-bottom: 40px;">
             <div>
-                <label class="tooltipped" data-position = "top" data-tooltip = "Check to watch battery state.">
+                <label class="tooltipped" data-position = "top" data-tooltip = "Select to display Battery Management on main screen">
                     {% if data.battery_tile_display_status %}
                     
                     <input id="battery_tile_display_status"  type="checkbox" class="filled-in" checked="checked" />
@@ -71,8 +71,8 @@
             
             <div class="inline">
                 <!-- This is battery types -->
-                <span class="enlarge_text">Type</span>
-                <select  id="battery_types" class="browser-default tooltipped" data-position = "top" data-tooltip = "Set battery types" style="width:110px; margin-left: 5px;">
+                <span>Battery Type</span>
+                <select  id="battery_types" class="browser-default tooltipped" data-position = "top" data-tooltip = "Select your battery Type" style="width:110px; margin-left: 5px;">
                     {% for x in range(data.battery_types|length) %}
                     {% if data.current_battery_index == x %}
                         <option value="{{ x }}" selected>{{data.battery_types[x]}}</option>
@@ -85,8 +85,8 @@
       
 
             <!-- This is fine tune value -->
-                <span class="enlarge_text">Fine Tune</span>
-                <select  id="fine_tune" class="browser-default tooltipped" data-position = "top" data-tooltip = "Set value of fine tune"  style="width:70px; margin-left: 5px;">
+                <span>Fine Tune Voltage</span>
+                <select  id="fine_tune" class="browser-default tooltipped" data-position = "top" data-tooltip = "Select a value to fine tune your battery voltage reading"  style="width:70px; margin-left: 5px;">
                     {% for x in range(-5,6,1) %}
                     {% if data.fine_tune == x / 10 %}
                         <option value="{{ x / 10 }}" selected>{{x / 10}}</option>
@@ -101,11 +101,11 @@
         </div>
         
         <!-- Add email  -->
-        <span class="enlarge_text">Notification Email Address</span>        
+        <span>Notification Email Address</span>        
         <div class="row" style="margin-top: -10px;">
             <div class="input-field col s10">
-                <input id="email" type="text" class="virtual-keyboard validate" data-kioskboard-type="all" data-kioskboard-specialcharacters="true" placeholder="Enter email" style="background-color: white; border-radius:2px; height: 34px;" value="{{data.email_value}}">
-                <span class="helper-text" data-error="wrong" data-success="right">Helper text</span>
+                <input id="email" type="text" class="virtual-keyboard validate" data-kioskboard-type="all" data-kioskboard-specialcharacters="true" placeholder="Enter Email Address" style="background-color: white; border-radius:2px; height: 34px;" value="{{data.email_value}}">
+                <span class="helper-text" data-error="E-mail Address maybe incorrectly formatted" data-success="">Helper text</span>
             </div>
             <div class="col s2" style="padding-right: 0px; padding-left: 0px;">
                 <button style="margin-top: 14px;width: 100%;" id="email_add_btn" onclick="emailAdd()" class="btn right {{data.tile_colors.0}} {{data.tile_colors.2}}"><span class="enlarge_text">Add</span></button>                  
@@ -115,7 +115,7 @@
         <!-- This is weather widget div -->
         <div class="left-align">
             <div>
-                <label class="tooltipped" data-position = "top" data-tooltip = "Check to watch weather forecast.">
+                <label class="tooltipped" data-position = "top" data-tooltip = "Enable Weather Forecast">
                     {% if data.weather_widget_display_status %}
                     
                     <input id="weather_widget_display_status"  type="checkbox" class="filled-in" checked="checked" />
@@ -159,7 +159,7 @@ function emailAdd(){
                 
             }
         })
-        var toastHtml = '<span style="margin: -25px; font-weight: bold; background-color: white; color: black; box-shadow: 3px; opacity: 0.9; border-radius:2px; padding: 12px;">Email is successfully added.</span>'
+        var toastHtml = '<span style="margin: -25px; font-weight: bold; background-color: white; color: black; box-shadow: 3px; opacity: 0.9; border-radius:2px; padding: 12px;">Email Address Updated.</span>'
         M.toast({html: toastHtml})
     }
 }
