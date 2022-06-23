@@ -106,8 +106,12 @@ def main():
                  Volt_list.clear()
                  print(Voltage_graph_round)
                  
-                 #Alert if voltage is between 1 and 11.5
-                 is_between = 1 <= Voltage_graph_round <= 11.5
+                 #Alert if voltage is between 1 and the alert value
+                 with open('voltalert.txt') as f: #read the voltalert.txt file
+                        alertvalue = float(f.read())
+                 print(alertvalue)
+
+                 is_between = 3 <= Voltage_graph_round <= alertvalue
                  Shall_Alert = is_between
                  if Shall_Alert==True:
                          GPIO.output(Buzzer,GPIO.HIGH)
