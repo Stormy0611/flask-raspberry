@@ -61,8 +61,8 @@
         "lighten-1",
         "Default",
         "darken-1",
-        "darken-3",
         "darken-2",
+        "darken-3",
         "darken-4"
     ],
     "avaliable_shade2_classes": [
@@ -80,6 +80,14 @@
         {
             "tile_name": " ",
             "tile_icon": "blank.png"
+        },
+        {
+            "tile_name": "12v Isolator",
+            "tile_icon": "battery.png"
+        },
+        {
+            "tile_name": "240v Isolator",
+            "tile_icon": "hookup.png"
         },
         {
             "tile_name": "Alarm",
