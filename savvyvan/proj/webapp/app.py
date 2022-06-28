@@ -220,24 +220,34 @@ def set_battery_types():
     reader.setBatteryType(current_index = battery_type_index)
     return jsonify({})
 
+@app.route('/run_emergency_shut')
+def run_emergency_shut():
+    reader = ConfigFileReader()
+    flash_value = reader.getBatteryFlashValue()
+    current_voltage = reader.getCurrentBatteryLevel()
+    emergency_shut_index = reader.getCurrentEmergencyShut()
+    if(current_voltage < flash_value and emergency_shut_index != 0):
+        print("sdfsdfsadfasdfasdfasdf I am runing")
+        emergency_shut_files = reader.getEmergencyShutFiles()
+        if(emergency_shut_index != 0):
+            file_path = os.path.join(reader.getBaseFolderPath(), "scripts/" + emergency_shut_files[int(emergency_shut_index) - 1])
+            if os.path.exists(file_path):
+                print((file_path))
+                try:
+                    subprocess.Popen(["python", file_path])
+                    sleep(0.05) # for file writing
+                except:
+                    subprocess.Popen(["python3", file_path])
+                    sleep(0.05) # for file writing
+            else:
+                print("There are no emergency file")
+    return jsonify({})
+
 @app.route('/set_emergency_shut')
 def set_emergency_shut():
     reader = ConfigFileReader()
     emergency_shut_index = request.args.get('emergency_shut_index')
-    emergency_shut_files = reader.getEmergencyShutFiles()
-    if(emergency_shut_index != 0):
-        file_path = os.path.join(reader.getBaseFolderPath(), "scripts/" + emergency_shut_files[int(emergency_shut_index) - 1])
-        if os.path.exists(file_path):
-            print((file_path))
-            try:
-                subprocess.Popen(["python", file_path])
-                sleep(0.05) # for file writing
-            except:
-                subprocess.Popen(["python3", file_path])
-                sleep(0.05) # for file writing
-        else:
-            print("There are no emergency file")
-    reader.setEmergencyShut(current_index = emergency_shut_index)
+    reader.setCurrentEmergencyShut(current_index = emergency_shut_index)
     return jsonify({})
 
 @app.route('/set_fine_tune')
@@ -413,13 +423,12 @@ def get_battery_level():
     battery_level = open(battery_level_file_path,'r').readlines()[-1].split('->')[-1]
     #print('battery_level a',battery_level)
     battery_level = reader.generateBatteryLevel(float(battery_level))
-    print('battery_level b',battery_level)
+    #print('battery_level b',battery_level)
     battery_color = str(reader.getBatteryColor(level=float(battery_level['percentage'])))
-    
+    reader.setCurrentBatteryLevel(battery_level["battery_level"])
     # print("---")
     # print( battery_level )
     return jsonify({'battery_level':battery_level,"battery_color":str(battery_color)})
-
 
 @app.route("/get_battery_tile_chart_data")
 def get_battery_tile_chart_data(): 

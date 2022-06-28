@@ -130,7 +130,12 @@ class ConfigFileReader():
             python_files = [x for x in  os.listdir(menu_folder_path) if str(x).endswith(".py")]
         return python_files
     
+    def setCurrentBatteryLevel(self, battery_level):
+        self.data['current_battery_level'] = battery_level
+        self.updateDataFile(self.data)
     
+    def getCurrentBatteryLevel(self):
+        return float(self.data['current_battery_level'])
             
     def getMenuPythonFilePath(self, file_name): 
         require_path = os.path.join(self.getMenuFolderPath(), file_name )
@@ -353,9 +358,12 @@ class ConfigFileReader():
         print(self.data['battery_types'][int(current_index)]["flash"], file=open(voltalert_file_path, "w"))
         self.updateDataFile(self.data)
 
-    def setEmergencyShut(self, current_index):
+    def setCurrentEmergencyShut(self, current_index):
         self.data['current_emergency_shut'] = int(current_index)
         self.updateDataFile(self.data)
+    
+    def getCurrentEmergencyShut(self):
+        return self.data['current_emergency_shut']
 
     def getFineTune(self):
         return float(self.data['fine_tune'])
@@ -525,4 +533,4 @@ class WPA_Supplicant_Reader():
 
 if __name__ == '__main__':
     reader = ConfigFileReader() 
-    print(reader.getBatteryFlashValue()) 
+    #print(reader.getBatteryFlashValue()) 

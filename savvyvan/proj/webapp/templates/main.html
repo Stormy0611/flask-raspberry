@@ -137,7 +137,7 @@ $(document).ready(function(){
     console.log('doc ready a')
     setTimeout(function(){
 
-        updateBatteryStatus(data.battery_level.percentage,data.battery_color) 
+        updateBatteryStatus(data.battery_level.percentage,data.battery_color)
     },1)
 })
 
@@ -221,8 +221,8 @@ $(function(){
     battery.Update(data.battery_level.percentage,data.battery_color); 
 })
  
-
 setInterval(function () {
+    var current_battery_level
     $.ajax({
         url:"/get_battery_level",
         success: function(res){
@@ -230,6 +230,12 @@ setInterval(function () {
             $('#current_battery_level').html(res.battery_level.battery_level)
             updateBatteryStatus(res.battery_level.percentage,res.battery_color) 
  
+        }
+    })
+    $.ajax({
+        url:"/run_emergency_shut",
+        success: function(res){
+
         }
     })
 },data.refresh_interval*1000);

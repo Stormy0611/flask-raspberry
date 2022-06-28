@@ -19,11 +19,12 @@
     "battery_max": 15,
     "display_external_link_icon": "False",
     "current_battery_index": 0,
+    "current_battery_level": 12.37,
     "current_emergency_shut": 0,
     "fine_tune": 0.2,
     "email": "",
     "notification_file": "notification.txt",
-    "notification_file_modify_time": "Tue Jun 28 10:55:20 2022",
+    "notification_file_modify_time": "Tue Jun 28 22:12:45 2022",
     "battery_types": [
         {
             "name": "AGM",
@@ -39,7 +40,7 @@
         }
     ],
     "emergency_shut": [
-        "off",
+        "Off",
         "All Tiles",
         "Tile 1 only",
         "Tile 2-8"
