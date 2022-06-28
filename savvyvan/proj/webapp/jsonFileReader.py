@@ -89,9 +89,9 @@ class ConfigFileReader():
                 # print("* Path Not Found")
         
         self.data = self.readFile()
-    def readFile(self):
-        
+    def readFile(self):       
         return json.loads(open(self.file_path, 'r', encoding="utf-8").read() ) 
+    
     def updateDataFile(self, new_data):
         with open(self.file_path, 'w') as f:
             json.dump(new_data, f, ensure_ascii=False, indent=4)

@@ -34,6 +34,7 @@ app = Flask(__name__)
 #app.config["DEBUG"] = True
 app.config["internal_config"] = config
 app.secret_key = 'flasksecretkey'
+
 ORIGINAL_DIR = os.getcwd()
 SCRIPT_DIR = os.path.join(ORIGINAL_DIR, config.INPUT_BASE)
 
