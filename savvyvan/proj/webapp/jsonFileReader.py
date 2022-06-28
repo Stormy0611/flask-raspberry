@@ -343,6 +343,13 @@ class ConfigFileReader():
     def getEmergencyShutFiles(self):
         return [x for x in self.data['emergency_shut_files']]
 
+    def getEmergencyShutFlag(self):
+        return self.data['emergency_shut_flag']
+    
+    def setEmergencyShutFlag(self, value):
+        self.data['emergency_shut_flag'] = value
+        self.updateDataFile(self.data)
+
     def getEmail(self):
         return self.data['email']
     

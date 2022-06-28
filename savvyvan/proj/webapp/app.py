@@ -34,7 +34,6 @@ app = Flask(__name__)
 #app.config["DEBUG"] = True
 app.config["internal_config"] = config
 app.secret_key = 'flasksecretkey'
-
 ORIGINAL_DIR = os.getcwd()
 SCRIPT_DIR = os.path.join(ORIGINAL_DIR, config.INPUT_BASE)
 
@@ -61,11 +60,6 @@ def index():
     weather.weatherFunction()
 
     return render_template("main.html", data=get_data().json, config=config_vars)
-
-
-
-
-
 
 @app.route("/sidebar_run_python_file")
 def start_sidebar_run_python_file():
@@ -223,11 +217,14 @@ def set_battery_types():
 @app.route('/run_emergency_shut')
 def run_emergency_shut():
     reader = ConfigFileReader()
+    flag = False
     flash_value = reader.getBatteryFlashValue()
     current_voltage = reader.getCurrentBatteryLevel()
     emergency_shut_index = reader.getCurrentEmergencyShut()
-    if(current_voltage < flash_value and emergency_shut_index != 0):
+    emergency_shut_flag = reader.getEmergencyShutFlag()
+    if(current_voltage < flash_value and emergency_shut_index != 0 and emergency_shut_flag == 0):
         print("sdfsdfsadfasdfasdfasdf I am runing")
+        reader.setEmergencyShutFlag(1)
         emergency_shut_files = reader.getEmergencyShutFiles()
         if(emergency_shut_index != 0):
             file_path = os.path.join(reader.getBaseFolderPath(), "scripts/" + emergency_shut_files[int(emergency_shut_index) - 1])
@@ -241,6 +238,8 @@ def run_emergency_shut():
                     sleep(0.05) # for file writing
             else:
                 print("There are no emergency file")
+    elif(current_voltage >= flash_value):
+        reader.setEmergencyShutFlag(0)
     return jsonify({})
 
 @app.route('/set_emergency_shut')
