@@ -96,7 +96,20 @@
                         
                     {% endfor %}
                 </select>
+                
+                <span style="margin-top:30px;">Emergency Shut on Low Voltage</span>
+                <select  id="emergency_shut" class="browser-default tooltipped" data-position = "top" data-tooltip = "Select Emergency shut method When the voltage drops below Flash value"  style="width:110px; margin-left: 5px; margin-top:30px;">
+                    {% for x in range(data.emergency_shut|length) %}
+                    {% if data.current_emergency_shut == x %}
+                        <option value="{{ x }}" selected>{{data.emergency_shut[x]}}</option>
+                    {% else %}
+                        <option value="{{ x }}">{{data.emergency_shut[x]}}</option>
+                    {% endif %}
+                        
+                    {% endfor %}
+                </select>   
             </div>
+            
 
         </div>
         
@@ -182,6 +195,16 @@ $('#battery_types').change(function(){
         data:{'battery_type_index':battery_types_index},
         success:function(res){
 
+        }
+    })
+})
+$('#emergency_shut').change(function(){
+    var emergency_shut_index = $('#emergency_shut').val()
+    $.ajax({
+        url:"/set_emergency_shut",
+        data:{'emergency_shut_index': emergency_shut_index},
+        success: function(res) {
+            
         }
     })
 })

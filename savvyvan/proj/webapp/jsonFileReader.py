@@ -328,7 +328,16 @@ class ConfigFileReader():
     
     def getCurrentBatteryIndex(self):
         return self.data['current_battery_index']
-  
+
+    def getEmergencyShut(self):
+        return [x for x in self.data['emergency_shut']]
+
+    def getCurrentEmergencyShut(self):
+        return self.data['current_emergency_shut']
+
+    def getEmergencyShutFiles(self):
+        return [x for x in self.data['emergency_shut_files']]
+
     def getEmail(self):
         return self.data['email']
     
@@ -342,6 +351,10 @@ class ConfigFileReader():
         self.data['current_battery_index'] = int(current_index)
         voltalert_file_path = os.path.join(self.getBaseFolderPath(), self.data['voltalert_file_path'])
         print(self.data['battery_types'][int(current_index)]["flash"], file=open(voltalert_file_path, "w"))
+        self.updateDataFile(self.data)
+
+    def setEmergencyShut(self, current_index):
+        self.data['current_emergency_shut'] = int(current_index)
         self.updateDataFile(self.data)
 
     def getFineTune(self):

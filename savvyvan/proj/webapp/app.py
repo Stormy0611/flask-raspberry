@@ -1,5 +1,6 @@
 from inspect import CO_ASYNC_GENERATOR
 import json
+from ntpath import join
 import os, os.path
 import datetime
 import subprocess
@@ -175,6 +176,8 @@ def title_page():
     data['battery_tile_display_status'] = reader.getBatteryTileDisplayStatus()
     data['battery_types'] = reader.getBatteryTypes()
     data['current_battery_index'] = reader.getCurrentBatteryIndex()
+    data['emergency_shut'] = reader.getEmergencyShut()
+    data['current_emergency_shut'] = reader.getCurrentEmergencyShut()
     data['fine_tune'] = reader.getFineTune()
     data['weather_widget_display_status'] = reader.get_weather_widget_display_status()
     data['email_value'] = reader.getEmail()
@@ -215,6 +218,26 @@ def set_battery_types():
     reader = ConfigFileReader()
     battery_type_index = request.args.get('battery_type_index')
     reader.setBatteryType(current_index = battery_type_index)
+    return jsonify({})
+
+@app.route('/set_emergency_shut')
+def set_emergency_shut():
+    reader = ConfigFileReader()
+    emergency_shut_index = request.args.get('emergency_shut_index')
+    emergency_shut_files = reader.getEmergencyShutFiles()
+    if(emergency_shut_index != 0):
+        file_path = os.path.join(reader.getBaseFolderPath(), "scripts/" + emergency_shut_files[int(emergency_shut_index) - 1])
+        if os.path.exists(file_path):
+            print((file_path))
+            try:
+                subprocess.Popen(["python", file_path])
+                sleep(0.05) # for file writing
+            except:
+                subprocess.Popen(["python3", file_path])
+                sleep(0.05) # for file writing
+        else:
+            print("There are no emergency file")
+    reader.setEmergencyShut(current_index = emergency_shut_index)
     return jsonify({})
 
 @app.route('/set_fine_tune')
