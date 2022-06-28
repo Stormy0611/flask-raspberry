@@ -1,5 +1,8 @@
 #import Paramiters to be used
 import RPi.GPIO as GPIO
+import time
+
+Buzzer = 17
 
 #set GPIO ports to GPIO mapped numbers and not pin number
 GPIO.setmode(GPIO.BCM)
@@ -13,7 +16,7 @@ GPIO.setup(12, GPIO.OUT)
 GPIO.setup(16, GPIO.OUT)
 GPIO.setup(20, GPIO.OUT)
 GPIO.setup(21, GPIO.OUT)
-GPIO.setup(17, GPIO.OUT)
+GPIO.setup(Buzzer, GPIO.OUT)
 
 #Script
  
@@ -45,7 +48,22 @@ GPIO.output(21, GPIO.HIGH)
 GPIO_Status = GPIO.input(21) #Save current state of port
 print(GPIO_Status,file=open("/home/pi/savvyvan/GPIOStats/GPIO21.txt", "w"))
 
-#Tap Noise
-GPIO.output(17,GPIO.HIGH)
-time.sleep(0.02)
+#Audiable alert
+GPIO.output(Buzzer,GPIO.HIGH)
+time.sleep(0.3)
 GPIO.output(Buzzer,GPIO.LOW)
+time.sleep(0.5)
+GPIO.output(Buzzer,GPIO.HIGH)
+time.sleep(0.3)
+GPIO.output(Buzzer,GPIO.LOW)
+time.sleep(0.5)
+GPIO.output(Buzzer,GPIO.HIGH)
+time.sleep(0.3)
+GPIO.output(Buzzer,GPIO.LOW)
+
+#Announce
+print("LOW VOLTAGE!!! Your connected appliances have been shut off to avoid battery damage.",file=open("../notification.txt", "w"))
+time.sleep(60)
+print("",file=open("../notification.txt", "w"))
+
+
