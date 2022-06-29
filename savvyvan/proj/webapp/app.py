@@ -1,13 +1,15 @@
+import requests
 from inspect import CO_ASYNC_GENERATOR
 import json
 from ntpath import join
-import os, os.path
+import os
+import os.path
 import datetime
 import subprocess
 from threading import Timer
 from time import sleep
 from traceback import print_exc
-from flask import Flask, request, flash
+from flask import Config, Flask, request, flash
 from flask import jsonify, render_template
 
 import os.path
@@ -16,18 +18,13 @@ import time
 sys.path.append(os.path.join(os.path.dirname(__file__), ''))
 try:
     from . import config
-    from .jsonFileReader import ConfigFileReader,WPA_Supplicant_Reader
+    from .jsonFileReader import ConfigFileReader, WPA_Supplicant_Reader
     from . import weather
 except:
     import config
-    from jsonFileReader import ConfigFileReader,WPA_Supplicant_Reader
+    from jsonFileReader import ConfigFileReader, WPA_Supplicant_Reader
     import weather
     pass
-     
-import json,requests
-
-
-
 
 
 app = Flask(__name__)
@@ -38,16 +35,18 @@ app.secret_key = 'flasksecretkey'
 ORIGINAL_DIR = os.getcwd()
 SCRIPT_DIR = os.path.join(ORIGINAL_DIR, config.INPUT_BASE)
 
-def sidebar_run_python_file(file_name): 
+
+def sidebar_run_python_file(file_name):
     file_path = ConfigFileReader().getMenuPythonFilePath(file_name=file_name)
     if os.path.exists(file_path):
-        print((file_path)) 
+        print((file_path))
         try:
             subprocess.Popen(["python", file_path])
         except:
             subprocess.Popen(["python3", file_path])
-        #flash('File '+file_name+' run') message won't appear immediately as no page refresh
+        # flash('File '+file_name+' run') message won't appear immediately as no page refresh
     return jsonify({})
+
 
 @app.route("/")
 def index():
@@ -62,10 +61,12 @@ def index():
 
     return render_template("main.html", data=get_data().json, config=config_vars)
 
+
 @app.route("/sidebar_run_python_file")
 def start_sidebar_run_python_file():
     file_name = request.args.get('file_name')
     return sidebar_run_python_file(file_name=file_name)
+
 
 @app.route("/save_color_value")
 def save_color_value():
@@ -73,14 +74,14 @@ def save_color_value():
     shade1_class = request.args.get('shade1_class')
     shade2_class = request.args.get('shade2_class')
     color_values = {
-        'base_class':base_class,
-        'shade1_class':shade1_class,
-        'shade2_class':shade2_class,
+        'base_class': base_class,
+        'shade1_class': shade1_class,
+        'shade2_class': shade2_class,
     }
-    
+
     # print(color_values)
     reader = ConfigFileReader()
-    reader.setBackgroundColor(new_colors=color_values) 
+    reader.setBackgroundColor(new_colors=color_values)
     return jsonify({})
 
 
@@ -92,29 +93,30 @@ def save_tile_info():
     # tile_file_mapping = request.args.get('tile_file_mapping')
     reader = ConfigFileReader()
     tile_icon = reader.getSpecificTileIcon(tile_name)
-    reader.setTileIcon(index=index,file_name=tile_icon)
-    reader.setTileName(index=index,tile_name=tile_name)
+    reader.setTileIcon(index=index, file_name=tile_icon)
+    reader.setTileName(index=index, tile_name=tile_name)
     # reader.setTileMappedPythonFile(index=index,file_name=tile_file_mapping)
-    
+
     # print(index)
     # print(tile_icon)
     # print(tile_file_mapping)
-    return jsonify({'tile_icon':tile_icon})
+    return jsonify({'tile_icon': tile_icon})
+
 
 @app.route("/save_total_title_to_display")
-def save_total_title_to_display(): 
-    total_title_to_display = request.args.get('total_title_to_display') 
+def save_total_title_to_display():
+    total_title_to_display = request.args.get('total_title_to_display')
     reader = ConfigFileReader()
-    reader.setTotalTilesToDisplay(new_count=total_title_to_display) 
+    reader.setTotalTilesToDisplay(new_count=total_title_to_display)
     return jsonify({})
 
 
 @app.route("/save_geo_location_city")
-def save_geo_location_city(): 
-    city = request.args.get('city') 
-    print('city:',city)
+def save_geo_location_city():
+    city = request.args.get('city')
+    print('city:', city)
     reader = ConfigFileReader()
-    reader.set_geo_location_city(city=city) 
+    reader.set_geo_location_city(city=city)
 
     # call weather function to get lat lon and weather info
     weather.weatherFunction()
@@ -122,15 +124,12 @@ def save_geo_location_city():
     return jsonify({})
 
 
-
-
-
-
 @app.route("/settings-page")
-def settings_page():  
-    data = { } 
+def settings_page():
+    data = {}
     reader = ConfigFileReader()
-    data['weather_widget_display_status'] = reader.get_weather_widget_display_status() #deleted_item
+    # deleted_item
+    data['weather_widget_display_status'] = reader.get_weather_widget_display_status()
     data['tilesList'] = reader.getTilesListing()
     data['total_title_to_display'] = reader.getTotalTilesToDisplay()
     data['max_total_title_to_display'] = reader.getMaxTotalTilesToDisplay()
@@ -140,13 +139,14 @@ def settings_page():
     data['avaliable_tiles'] = reader.getAvaliableTileNames()
     data['tile_colors'] = reader.getTilesBackgroundColorClasses()
     data['all_color_classes'] = reader.getAllColorClasses()
-     
 
     data['paragraph'] = reader.getParagraphText()
     data['notification'] = reader.getNotification()
-    data['battery_tile_display_status'] = reader.getBatteryTileDisplayStatus() # deleted_item
+    # deleted_item
+    data['battery_tile_display_status'] = reader.getBatteryTileDisplayStatus()
     data['display_external_link_icon'] = reader.display_external_link_icon()
-    return render_template("settings.html",data = data)
+    return render_template("settings.html", data=data)
+
 
 @app.route("/load_notification")
 def load_notification():
@@ -163,9 +163,10 @@ def load_notification():
     else:
         return jsonify({})
 
+
 @app.route("/title-page")
 def title_page():
-    data = { }
+    data = {}
     reader = ConfigFileReader()
     data['tile_colors'] = reader.getTilesBackgroundColorClasses()
     data['battery_tile_display_status'] = reader.getBatteryTileDisplayStatus()
@@ -177,43 +178,45 @@ def title_page():
     data['weather_widget_display_status'] = reader.get_weather_widget_display_status()
     data['email_value'] = reader.getEmail()
     data['notification'] = reader.getNotification()
-    return render_template("/optional.html", data = data)
+    return render_template("/optional.html", data=data)
+
 
 @app.route("/add_email")
 def add_email():
     email = request.args.get('email')
     reader = ConfigFileReader()
-    reader.setEmail(email = email)
+    reader.setEmail(email=email)
     return jsonify({})
 
+
 @app.route("/wifi-settings-page")
-def wifi_settings_page():  
-    data = { } 
-    reader = ConfigFileReader() 
+def wifi_settings_page():
+    data = {}
+    reader = ConfigFileReader()
     data['menu_python_files'] = reader.getMenuPythonFiles()
     data['tile_colors'] = reader.getTilesBackgroundColorClasses()
     data['notification'] = reader.getNotification()
     data['network_ssids'] = WPA_Supplicant_Reader().getNetworkSSID()
     data['display_external_link_icon'] = reader.display_external_link_icon()
-    return render_template("wifi_settings.html",data = data)
-
-
+    return render_template("wifi_settings.html", data=data)
 
 
 @app.route("/set_battery_tile_display_status")
-def set_battery_tile_display_status():  
-    reader = ConfigFileReader() 
-    status = request.args.get('status') 
+def set_battery_tile_display_status():
+    reader = ConfigFileReader()
+    status = request.args.get('status')
     reader.setBatteryTileDisplayStatus(status)
     # print(status)
     return jsonify({})
+
 
 @app.route('/set_battery_type')
 def set_battery_types():
     reader = ConfigFileReader()
     battery_type_index = request.args.get('battery_type_index')
-    reader.setBatteryType(current_index = battery_type_index)
+    reader.setBatteryType(current_index=battery_type_index)
     return jsonify({})
+
 
 @app.route('/run_emergency_shut')
 def run_emergency_shut():
@@ -228,72 +231,80 @@ def run_emergency_shut():
         reader.setEmergencyShutFlag(1)
         emergency_shut_files = reader.getEmergencyShutFiles()
         if(emergency_shut_index != 0):
-            file_path = os.path.join(reader.getBaseFolderPath(), "scripts/" + emergency_shut_files[int(emergency_shut_index) - 1])
+            file_path = os.path.join(reader.getBaseFolderPath(
+            ), "scripts/" + emergency_shut_files[int(emergency_shut_index) - 1])
             if os.path.exists(file_path):
                 print((file_path))
                 try:
                     subprocess.Popen(["python", file_path])
-                    sleep(0.05) # for file writing
+                    sleep(0.05)  # for file writing
                 except:
                     subprocess.Popen(["python3", file_path])
-                    sleep(0.05) # for file writing
+                    sleep(0.05)  # for file writing
             else:
                 print("There are no emergency file")
     elif(current_voltage >= flash_value):
         reader.setEmergencyShutFlag(0)
     return jsonify({})
 
+
 @app.route('/set_emergency_shut')
 def set_emergency_shut():
     reader = ConfigFileReader()
     emergency_shut_index = request.args.get('emergency_shut_index')
-    reader.setCurrentEmergencyShut(current_index = emergency_shut_index)
+    reader.setCurrentEmergencyShut(current_index=emergency_shut_index)
     return jsonify({})
+
 
 @app.route('/set_fine_tune')
 def set_fine_tune():
     reader = ConfigFileReader()
     fine_tune = request.args.get('fine_tune')
-    reader.setFineTune(fine_tune = fine_tune)
+    reader.setFineTune(fine_tune=fine_tune)
     return jsonify({})
 
+
 @app.route("/set_weather_widget_display_status")
-def set_weather_widget_display_status():  
-    reader = ConfigFileReader() 
-    status = request.args.get('status') 
+def set_weather_widget_display_status():
+    reader = ConfigFileReader()
+    status = request.args.get('status')
     reader.set_weather_widget_display_status(status)
     # print(status)
     return jsonify({})
 
+
 @app.route("/delete_ssid")
-def delete_ssid():  
-    print('SSID Deleted, Please Commit Changes')  
+def delete_ssid():
+    print('SSID Deleted, Please Commit Changes')
     flash('SSID Deleted, Please Commit Changes')
-    ssid = request.args.get('ssid') 
-    print('ssid:',ssid)
+    ssid = request.args.get('ssid')
+    print('ssid:', ssid)
     WPA_Supplicant_Reader().deleteGivenSSID(ssid=ssid)
     return jsonify({})
 
+
 @app.route("/save_netwrok")
 def save_netwrok():
-    print('SSID Saved, Please Commit Changes')  
+    print('SSID Saved, Please Commit Changes')
     flash('SSID Saved, Please Commit Changes')
-    ssid = request.args.get('ssid') 
-    password = request.args.get('password')  
-    WPA_Supplicant_Reader().addNewNetwrok(ssid=ssid,password=password)
+    ssid = request.args.get('ssid')
+    password = request.args.get('password')
+    WPA_Supplicant_Reader().addNewNetwrok(ssid=ssid, password=password)
     return jsonify({})
 
-@app.route("/get_weather_data") 
-def get_weather_data():    
-    reader = ConfigFileReader()
-    weather_data = reader.get_weather_data() 
-    return jsonify({'weather_data':weather_data})
 
-@app.route("/get-data") 
+@app.route("/get_weather_data")
+def get_weather_data():
+    reader = ConfigFileReader()
+    weather_data = reader.get_weather_data()
+    return jsonify({'weather_data': weather_data})
+
+
+@app.route("/get-data")
 def get_data():
     print('get_data')
-    data = dict()  
-    reader = ConfigFileReader() 
+    data = dict()
+    reader = ConfigFileReader()
     data['weather_widget_display_status'] = reader.get_weather_widget_display_status()
     data['battery_level'] = get_battery_level().json['battery_level']
     data['battery_color'] = get_battery_level().json['battery_color']
@@ -308,24 +319,26 @@ def get_data():
     data['weather_data_api_key'] = reader.get_weather_data_api_key()
     data['display_external_link_icon'] = reader.display_external_link_icon()
     data['notification'] = reader.getNotification()
-    data["time"] = datetime.datetime.now().strftime("%H:%M") # Passing from the server as Python has better date/time formatting options
+    # Passing from the server as Python has better date/time formatting options
+    data["time"] = datetime.datetime.now().strftime("%H:%M")
 
     # Temperature and humidity
     data["temp"] = dict()
     fpath = os.path.join(config.INPUT_BASE, config.READ_TEMP)
     if os.path.exists(fpath):
         with open(fpath, "r") as f:
-            data["temp"].update(parse_kvs(f.read().split())) # Converts Temp=X Humidity=Y -> {"Temp": "X", "Humidity": "Y"}
+            # Converts Temp=X Humidity=Y -> {"Temp": "X", "Humidity": "Y"}
+            data["temp"].update(parse_kvs(f.read().split()))
 
     # Battery
     data["battery"] = dict()
     fpath = os.path.join(config.INPUT_BASE, config.READ_BATTERY)
     if os.path.exists(fpath):
         with open(fpath, "r") as f:
-            #data["battery"].update(parse_kvs(f.read().split())) # Converts Temp=X Humidity=Y -> {"Temp": "X", "Humidity": "Y"}
+            # data["battery"].update(parse_kvs(f.read().split())) # Converts Temp=X Humidity=Y -> {"Temp": "X", "Humidity": "Y"}
             try:
                 data["battery"]["volts"] = float(f.read())
-                #print('Volts:',data["battery"]["volts"])
+                # print('Volts:',data["battery"]["volts"])
             except ValueError:
                 print('Error getting volts')
 
@@ -334,25 +347,28 @@ def get_data():
     fpath = os.path.join(config.INPUT_BASE, config.READ_GAS)
     if os.path.exists(fpath):
         with open(fpath, "r") as f:
-            #data["gas"].update(parse_kvs(f.read())) # Converts Co2=X Gas=Y -> {"Co2": "X", "Gas": "Y"}
+            # data["gas"].update(parse_kvs(f.read())) # Converts Co2=X Gas=Y -> {"Co2": "X", "Gas": "Y"}
             gas_data = parse_kvs(f.read().splitlines())
             co2_info = gas_data["CO2"].split()
             gas_info = gas_data["Gas"].split()
             data["gas"]["co2_ok"] = co2_info[0] == "Good"
             #data["gas"]["co2_text"] = gas_data["CO2"]
             #data["gas"]["co2_text"] = ("%s" if data["gas"]["co2_ok"] else "! %s !") % co2_info[1]
-            data["gas"]["co2_text"] = ("OK %s" % co2_info[1]) if data["gas"]["co2_ok"] else "Detected!!"
+            data["gas"]["co2_text"] = (
+                "OK %s" % co2_info[1]) if data["gas"]["co2_ok"] else "Detected!!"
             data["gas"]["gas_ok"] = gas_info[0] == "Good"
             #data["gas"]["gas_text"] = gas_data["Gas"]
-            data["gas"]["gas_text"] = ("OK %s" % gas_info[1]) if data["gas"]["gas_ok"] else "Detected!!"
+            data["gas"]["gas_text"] = (
+                "OK %s" % gas_info[1]) if data["gas"]["gas_ok"] else "Detected!!"
 
     # GPIO states
     data["gpio"] = dict()
     for eid in config.ON_OFF_SCRIPTS:
-        fpath = os.path.join(config.GPIO_BASE, "GPIO%d.txt" % config.ON_OFF_SCRIPTS[eid])
+        fpath = os.path.join(config.GPIO_BASE, "GPIO%d.txt" %
+                             config.ON_OFF_SCRIPTS[eid])
         val = get_sensor_info(fpath)
         if val in ("0", "1"):
-            data["gpio"][eid] = val == "0" # 0 = on, 1 = off
+            data["gpio"][eid] = val == "0"  # 0 = on, 1 = off
         else:
             data["gpio"][eid] = val
 
@@ -360,7 +376,7 @@ def get_data():
     data["measurements"] = dict()
     for eid in config.SENSORS:
         fpath = os.path.join(config.INPUT_BASE, config.SENSORS[eid])
-        
+
         data["measurements"][eid] = get_sensor_info(fpath)
 
     # Done
@@ -368,50 +384,46 @@ def get_data():
     # print(data)
     return jsonify(data)
 
+
 @app.route("/run_mapped_python_file")
 def run_mapped_python_file():
-    tile_file_mapping = request.args.get('tile_file_mapping') 
-    tile_index = int(request.args.get('index')) 
-    mapped_file_path = ConfigFileReader().getMappedPythonFilePath(file_path=tile_file_mapping)
-    # print(mapped_file_path) 
+    tile_file_mapping = request.args.get('tile_file_mapping')
+    tile_index = int(request.args.get('index'))
+    mapped_file_path = ConfigFileReader().getMappedPythonFilePath(
+        file_path=tile_file_mapping)
+    # print(mapped_file_path)
     stat_folder = ConfigFileReader().getGPIOStatFolderPath()
-    stat_file = [os.path.join(stat_folder, x) for x in os.listdir(stat_folder) if str(x).lower().split('.txt')[0] in str(tile_file_mapping).lower()]
-    print("-> Running Python File = ",mapped_file_path)
+    stat_file = [os.path.join(stat_folder, x) for x in os.listdir(stat_folder) if str(
+        x).lower().split('.txt')[0] in str(tile_file_mapping).lower()]
+    print("-> Running Python File = ", mapped_file_path)
     try:
         subprocess.Popen(["python", mapped_file_path])
     except:
         subprocess.Popen(["python3", mapped_file_path])
-        
+
     state = None
     if stat_file and os.path.exists(stat_file[0]):
-        stat_file = stat_file[0] 
-        state = int(open(stat_file,'r',encoding="utf-8").read()) 
-    ConfigFileReader().set_is_active_tile(index=tile_index,state=state)
-    return jsonify({'state':state})
-
-
+        stat_file = stat_file[0]
+        state = int(open(stat_file, 'r', encoding="utf-8").read())
+    ConfigFileReader().set_is_active_tile(index=tile_index, state=state)
+    return jsonify({'state': state})
 
 
 @app.route("/get_tiles_states")
 def get_tiles_states():
-    stat_folder = ConfigFileReader().getGPIOStatFolderPath()
-    data = json.loads(request.args.get('data') )
-    
-    for id,file_mapping in data.items():
-        stat_file = [os.path.join(stat_folder, x) for x in os.listdir(stat_folder) if str(x).lower().split('.txt')[0] in str(file_mapping).lower()]
+    reader = ConfigFileReader()
+    stat_folder = reader.getGPIOStatFolderPath()
+    data = json.loads(request.args.get('data'))
+
+    for id, file_mapping in data.items():
+        stat_file = [os.path.join(stat_folder, x) for x in os.listdir(
+            stat_folder) if str(x).lower().split('.txt')[0] in str(file_mapping).lower()]
         if stat_file and os.path.exists(stat_file[0]):
-            stat_file = stat_file[0] 
-            state = int(open(stat_file,'r',encoding="utf-8").read()) 
+            stat_file = stat_file[0]
+            state = int(open(stat_file, 'r', encoding="utf-8").read())
             data[id] = state
 
-        
- 
-    
-    
-    
-    return jsonify({'states':data})
-
-
+    return jsonify({'states': data})
 
 
 @app.route("/get_battery_level")
@@ -420,41 +432,37 @@ def get_battery_level():
     battery_level = 0
     battery_color = None
     battery_level_file_path = reader.getBatteryDataFilePath()
-    battery_level = open(battery_level_file_path,'r').readlines()[-1].split('->')[-1]
-    #print('battery_level a',battery_level)
+    battery_level = open(battery_level_file_path,
+                         'r').readlines()[-1].split('->')[-1]
+    print('battery_level a', battery_level)
     battery_level = reader.generateBatteryLevel(float(battery_level))
     #print('battery_level b',battery_level)
-    battery_color = str(reader.getBatteryColor(level=float(battery_level['percentage'])))
+    battery_color = str(reader.getBatteryColor(
+        level=float(battery_level['percentage'])))
     reader.setCurrentBatteryLevel(battery_level["battery_level"])
-    # print("---")
-    # print( battery_level )
-    return jsonify({'battery_level':battery_level,"battery_color":str(battery_color)})
+    print("---")
+    print(battery_level)
+    return jsonify({'battery_level': battery_level, "battery_color": str(battery_color)})
+
 
 @app.route("/get_battery_tile_chart_data")
-def get_battery_tile_chart_data(): 
+def get_battery_tile_chart_data():
     reader = ConfigFileReader()
     data = reader.getChartData()
-    return jsonify({'data':data})
-
-
+    return jsonify({'data': data})
 
 
 @app.route("/wifi_settings_page_run_py_file")
 def wifi_settings_page_run_py_file():
-    flash('Changes Commited') 
+    flash('Changes Commited')
     reader = ConfigFileReader()
     path = reader.get_wifi_settings_page_run_py_file()
-    print("-> Running python file = ",path)
+    print("-> Running python file = ", path)
     try:
         subprocess.Popen(["python", path])
     except:
         subprocess.Popen(["python3", path])
     return jsonify({})
-
-
-
-
-
 
 
 @app.route("/run-onoff", methods=["POST"])
@@ -468,7 +476,7 @@ def run_onoff():
             #os.system("python3 " + fpath)
             #os.spawnl(os.P_DETACH, "python3 " + fpath)
             subprocess.Popen(["python3", fpath])
-            sleep(0.05) # Time for quick scripts to update GPIO pins and other data
+            sleep(0.05)  # Time for quick scripts to update GPIO pins and other data
         except Exception:
             print_exc()
         os.chdir(ORIGINAL_DIR)
@@ -476,6 +484,7 @@ def run_onoff():
         return get_data()
     else:
         return "Script %r not found" % fpath, 400
+
 
 @app.route("/run-other", methods=["POST"])
 def run_other():
@@ -487,30 +496,33 @@ def run_other():
             #os.system("python3 " + fpath)
             #os.spawnl(os.P_DETACH, "python3 " + fpath)
             subprocess.Popen(["python3", fpath])
-            sleep(0.05) # Time for quick scripts to update GPIO pins and other data
+            sleep(0.05)  # Time for quick scripts to update GPIO pins and other data
         except Exception:
             print_exc()
         os.chdir(ORIGINAL_DIR)
 
         return get_data()
-    else: 
+    else:
         print("*** Script %r not found" % fpath)
         return "Script %r not found" % fpath, 400
 
+
 def parse_kvs(skv):
     out = dict()
-    entries = [x for x in skv if x] # Split the file across whitespace and skip any empty ones
-                                                            # "Temp=X Humidity=Y" -> ["Temp=X", "Humidity=Y"]
+    # Split the file across whitespace and skip any empty ones
+    entries = [x for x in skv if x]
+    # "Temp=X Humidity=Y" -> ["Temp=X", "Humidity=Y"]
 
     for entry in entries:
         try:
-            kv = entry.split("=") # "Temp=X" -> "Temp", "X"
-            out[kv[0]] = kv[1] # Add to our grand list of data
+            kv = entry.split("=")  # "Temp=X" -> "Temp", "X"
+            out[kv[0]] = kv[1]  # Add to our grand list of data
         except Exception:
             print(entry)
             print_exc()
 
     return out
+
 
 def get_sensor_info(fpath):
     if os.path.exists(fpath):
@@ -529,7 +541,7 @@ def add_header(r):
 
 
 def main():
-    app.run(host="localhost", port=3001,debug=True)
+    app.run(host="localhost", port=3001, debug=True)
 
 
 if __name__ == "__main__":
