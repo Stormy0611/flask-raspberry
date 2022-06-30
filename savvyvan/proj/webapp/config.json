@@ -18,14 +18,14 @@
     "battery_min": 10.5,
     "battery_max": 15,
     "display_external_link_icon": "False",
-    "current_battery_index": 1,
+    "current_battery_index": 0,
     "current_battery_level": 12.37,
-    "current_emergency_shut": 3,
+    "current_emergency_shut": 0,
     "emergency_shut_flag": 0,
     "fine_tune": 0.2,
     "email": "",
     "notification_file": "notification.txt",
-    "notification_file_modify_time": "Tue Jun 28 22:12:45 2022",
+    "notification_file_modify_time": "Thu Jun 30 17:50:56 2022",
     "battery_types": [
         {
             "name": "AGM",
