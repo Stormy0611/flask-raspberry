@@ -1,6 +1,7 @@
 import requests
 from inspect import CO_ASYNC_GENERATOR
 import json
+from ntpath import join
 import os
 import os.path
 import datetime
@@ -8,7 +9,7 @@ import subprocess
 from threading import Timer
 from time import sleep
 from traceback import print_exc
-from flask import Flask, request, flash
+from flask import Config, Flask, request, flash
 from flask import jsonify, render_template
 
 import os.path
@@ -220,15 +221,16 @@ def set_battery_types():
 @app.route('/run_emergency_shut')
 def run_emergency_shut():
     reader = ConfigFileReader()
+    flag = False
     flash_value = reader.getBatteryFlashValue()
     current_voltage = reader.getCurrentBatteryLevel()
     emergency_shut_index = reader.getCurrentEmergencyShut()
     emergency_shut_flag = reader.getEmergencyShutFlag()
-    if current_voltage < flash_value and emergency_shut_index != 0 and emergency_shut_flag == 0:
+    if(current_voltage < flash_value and emergency_shut_index != 0 and emergency_shut_flag == 0):
         print("sdfsdfsadfasdfasdfasdf I am runing")
-        reader.setEmergencyShutFlag(value=1)
+        reader.setEmergencyShutFlag(1)
         emergency_shut_files = reader.getEmergencyShutFiles()
-        if emergency_shut_index != 0:
+        if(emergency_shut_index != 0):
             file_path = os.path.join(reader.getBaseFolderPath(
             ), "scripts/" + emergency_shut_files[int(emergency_shut_index) - 1])
             if os.path.exists(file_path):
@@ -241,8 +243,8 @@ def run_emergency_shut():
                     sleep(0.05)  # for file writing
             else:
                 print("There are no emergency file")
-    elif current_voltage >= flash_value:
-        reader.setEmergencyShutFlag(value=0)
+    elif(current_voltage >= flash_value):
+        reader.setEmergencyShutFlag(0)
     return jsonify({})
 
 
@@ -437,7 +439,7 @@ def get_battery_level():
     #print('battery_level b',battery_level)
     battery_color = str(reader.getBatteryColor(
         level=float(battery_level['percentage'])))
-    reader.setCurrentBatteryLevel(battery_level['battery_level'])
+    reader.setCurrentBatteryLevel(battery_level["battery_level"])
     print("---")
     print(battery_level)
     return jsonify({'battery_level': battery_level, "battery_color": str(battery_color)})
