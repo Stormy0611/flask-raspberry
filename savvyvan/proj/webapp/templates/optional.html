@@ -3,221 +3,236 @@
 {% block content %}
 
 <style>
-.enlarge_text{
-    font-size: 20px !important; 
-    font-weight: bold !important;
-} 
-.title_text {
-    padding: 2%;
-    font-size: 40px !important;
-    font-weight: bold !important;
-}
+    .enlarge_text {
+        font-size: 20px !important;
+        font-weight: bold !important;
+    }
 
-.center_object {
-    display: flex; 
-    flex-direction: row; 
-    justify-content: center; 
-    align-items: center;
-}
-.inline {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-content: space-between;
-    align-items: baseline;
-    margin-top: 20px;
-}
-.inline span {
-    margin-left: 40px;
-}
-.inline select {
-    margin-left: -40px;
-}
-.left-align label {
-    color: white;
-}
+    .title_text {
+        padding: 2%;
+        font-size: 40px !important;
+        font-weight: bold !important;
+    }
+
+    .center_object {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .inline {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-content: space-between;
+        align-items: baseline;
+        margin-top: 20px;
+    }
+
+    .inline span {
+        margin-left: 40px;
+    }
+
+    .inline select {
+        margin-left: -40px;
+    }
+
+    .left-align label {
+        color: white;
+    }
 </style>
 
 
 <div class="row">
- 
-<div class="col s12 l12 m12">
-    
-    <!-- This is title div -->
-    <div class="center_object">
-        <span class="title_text">
-            <!-- Optional Titles -->
-        </span> 
-    </div>
-    
-    <div style="margin: 2% 25%;">
-        
-        <!-- This is battery div -->
-        <div class="left-align" style="margin-bottom: 40px;">
-            <div>
-                <label class="tooltipped" data-position = "top" data-tooltip = "Select to display Battery Management on main screen">
-                    {% if data.battery_tile_display_status %}
-                    
-                    <input id="battery_tile_display_status"  type="checkbox" class="filled-in" checked="checked" />
-                    
-                    {% else %}
-                    <input id="battery_tile_display_status"  type="checkbox" class="filled-in"  />
-                    
-                    {% endif %}
-                    
-                    <span class="enlarge_text">Battery Management</span>
-                </label>
-            </div>
-            
-            <div class="inline">
-                <!-- This is battery types -->
-                <span>Battery Type</span>
-                <select  id="battery_types" class="browser-default tooltipped" data-position = "top" data-tooltip = "Select your battery Type" style="width:110px; margin-left: 5px;">
-                    {% for x in range(data.battery_types|length) %}
-                    {% if data.current_battery_index == x %}
+
+    <div class="col s12 l12 m12">
+
+        <!-- This is title div -->
+        <div class="center_object">
+            <span class="title_text">
+                <!-- Optional Titles -->
+            </span>
+        </div>
+
+        <div style="margin: 2% 25%;">
+
+            <!-- This is battery div -->
+            <div class="left-align" style="margin-bottom: 40px;">
+                <div>
+                    <label class="tooltipped" data-position="top"
+                        data-tooltip="Select to display Battery Management on main screen">
+                        {% if data.battery_tile_display_status %}
+
+                        <input id="battery_tile_display_status" type="checkbox" class="filled-in" checked="checked" />
+
+                        {% else %}
+                        <input id="battery_tile_display_status" type="checkbox" class="filled-in" />
+
+                        {% endif %}
+
+                        <span class="enlarge_text">Battery Management</span>
+                    </label>
+                </div>
+
+                <div class="inline">
+                    <!-- This is battery types -->
+                    <span>Battery Type</span>
+                    <select id="battery_types" class="browser-default tooltipped" data-position="top"
+                        data-tooltip="Select your battery Type" style="width:110px; margin-left: 5px;">
+                        {% for x in range(data.battery_types|length) %}
+                        {% if data.current_battery_index == x %}
                         <option value="{{ x }}" selected>{{data.battery_types[x]}}</option>
-                    {% else %}
+                        {% else %}
                         <option value="{{ x }}">{{data.battery_types[x]}}</option>
-                    {% endif %}
-                        
-                    {% endfor %}
-                </select>
-      
+                        {% endif %}
 
-            <!-- This is fine tune value -->
-                <span>Fine Tune Voltage</span>
-                <select  id="fine_tune" class="browser-default tooltipped" data-position = "top" data-tooltip = "Select a value to fine tune your battery voltage reading"  style="width:70px; margin-left: 5px;">
-                    {% for x in range(-5,6,1) %}
-                    {% if data.fine_tune == x / 10 %}
+                        {% endfor %}
+                    </select>
+
+
+                    <!-- This is fine tune value -->
+                    <span>Fine Tune Voltage</span>
+                    <select id="fine_tune" class="browser-default tooltipped" data-position="top"
+                        data-tooltip="Select a value to fine tune your battery voltage reading"
+                        style="width:70px; margin-left: 5px;">
+                        {% for x in range(-5,6,1) %}
+                        {% if data.fine_tune == x / 10 %}
                         <option value="{{ x / 10 }}" selected>{{x / 10}}</option>
-                    {% else %}
+                        {% else %}
                         <option value="{{ x / 10 }}">{{x / 10}}</option>
-                    {% endif %}
-                        
-                    {% endfor %}
-                </select>
-                
-                <span style="margin-top:30px;">Emergency Shut on Low Voltage</span>
-                <select  id="emergency_shut" class="browser-default tooltipped" data-position = "top" data-tooltip = "Select Emergency shut method When the voltage drops below Flash value"  style="width:110px; margin-left: 5px; margin-top:30px;">
-                    {% for x in range(data.emergency_shut|length) %}
-                    {% if data.current_emergency_shut == x %}
+                        {% endif %}
+
+                        {% endfor %}
+                    </select>
+
+                    <span style="margin-top:30px;">Emergency Shut on Low Voltage</span>
+                    <select id="emergency_shut" class="browser-default tooltipped" data-position="top"
+                        data-tooltip="Select Emergency shut method When the voltage drops below Flash value"
+                        style="width:110px; margin-left: 5px; margin-top:30px;">
+                        {% for x in range(data.emergency_shut|length) %}
+                        {% if data.current_emergency_shut == x %}
                         <option value="{{ x }}" selected>{{data.emergency_shut[x]}}</option>
-                    {% else %}
+                        {% else %}
                         <option value="{{ x }}">{{data.emergency_shut[x]}}</option>
-                    {% endif %}
-                        
-                    {% endfor %}
-                </select>   
-            </div>
-            
+                        {% endif %}
 
-        </div>
-        
-        <!-- Add email  -->
-        <span>Notification Email Address</span>        
-        <div class="row" style="margin-top: -10px;">
-            <div class="input-field col s10">
-                <input id="email" type="text" class="virtual-keyboard validate" data-kioskboard-type="all" data-kioskboard-specialcharacters="true" placeholder="Enter Email Address" style="background-color: white; border-radius:2px; height: 34px;" value="{{data.email_value}}">
-                <span class="helper-text" data-error="E-mail Address maybe incorrectly formatted" data-success="">Helper text</span>
-            </div>
-            <div class="col s2" style="padding-right: 0px; padding-left: 0px;">
-                <button style="margin-top: 14px;width: 100%;" id="email_add_btn" onclick="emailAdd()" class="btn right {{data.tile_colors.0}} {{data.tile_colors.2}}"><span class="enlarge_text">Add</span></button>                  
-            </div>
-        </div>
+                        {% endfor %}
+                    </select>
+                </div>
 
-        <!-- This is weather widget div -->
-        <div class="left-align">
-            <div>
-                <label class="tooltipped" data-position = "top" data-tooltip = "Enable Weather Forecast">
-                    {% if data.weather_widget_display_status %}
-                    
-                    <input id="weather_widget_display_status"  type="checkbox" class="filled-in" checked="checked" />
-                    
-                    {% else %}
-                    <input id="weather_widget_display_status"  type="checkbox" class="filled-in"  />
-                    
-                    {% endif %}
-                    
-                    <span class="enlarge_text">Weather Widget </span>
-                </label>
+
+            </div>
+
+            <!-- Add email  -->
+            <span>Notification Email Address</span>
+            <div class="row" style="margin-top: -10px;">
+                <div class="input-field col s10">
+                    <input id="email" type="text" class="virtual-keyboard validate" data-kioskboard-type="all"
+                        data-kioskboard-specialcharacters="true" placeholder="Enter Email Address"
+                        style="background-color: white; border-radius:2px; height: 34px;" value="{{data.email_value}}">
+                    <span class="helper-text" data-error="E-mail Address maybe incorrectly formatted"
+                        data-success="">Helper text</span>
+                </div>
+                <div class="col s2" style="padding-right: 0px; padding-left: 0px;">
+                    <button style="margin-top: 14px;width: 100%;" id="email_add_btn" onclick="emailAdd()"
+                        class="btn right {{data.tile_colors.0}} {{data.tile_colors.2}}"><span
+                            class="enlarge_text">Add</span></button>
+                </div>
+            </div>
+
+            <!-- This is weather widget div -->
+            <div class="left-align">
+                <div>
+                    <label class="tooltipped" data-position="top" data-tooltip="Enable Weather Forecast">
+                        {% if data.weather_widget_display_status %}
+
+                        <input id="weather_widget_display_status" type="checkbox" class="filled-in" checked="checked" />
+
+                        {% else %}
+                        <input id="weather_widget_display_status" type="checkbox" class="filled-in" />
+
+                        {% endif %}
+
+                        <span class="enlarge_text">Weather Widget </span>
+                    </label>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-$(document).ready(function(){
-    $('.tooltipped').tooltip();
-});
-$('#battery_tile_display_status').change(function(){
-    var status = $(this).is(':checked')
-    $.ajax({
-        url:"/set_battery_tile_display_status",
-        data: {'status':status},
-        success: function(res){
-
-        }
-    })
-})
-function emailAdd(){
-    var email = $("#email").val();
-    if($("#email").hasClass('validate valid')) {
-        
-        $.ajax({
-            url:"/add_email",
-            data:{
-                "email":email
-            },
-            success: function(res){
-                
-            }
+    <script>
+        $(document).ready(function () {
+            $('.tooltipped').tooltip();
+        });
+        $('#battery_tile_display_status').change(function () {
+            var status = $(this).is(':checked')
+            $.ajax({
+                url: "/set_battery_tile_display_status",
+                data: { 'status': status },
+                success: function (res) {
+                }
+            })
         })
-        var toastHtml = '<span style="margin: -25px; font-weight: bold; background-color: white; color: black; box-shadow: 3px; opacity: 0.9; border-radius:2px; padding: 12px;">Email Address Updated.</span>'
-        M.toast({html: toastHtml})
-    }
-}
+        function emailAdd() {
+            var email = $("#email").val();
+            if ($("#email").hasClass('validate valid')) {
 
-$('#weather_widget_display_status').change(function(){
-    var status = $(this).is(':checked')
-    $.ajax({
-        url:"/set_weather_widget_display_status",
-        data: {'status':status},
-        success: function(res){
+                $.ajax({
+                    url: "/add_email",
+                    data: {
+                        "email": email
+                    },
+                    success: function (res) {
 
+                    }
+                })
+                var toastHtml = '<span style="margin: -25px; font-weight: bold; background-color: white; color: black; box-shadow: 3px; opacity: 0.9; border-radius:2px; padding: 12px;">Email Address Updated.</span>'
+                M.toast({ html: toastHtml })
+            }
         }
-    })
- })
 
-$('#battery_types').change(function(){
-    var battery_types_index = $('#battery_types').val()
-    $.ajax({
-        url:"/set_battery_type",
-        data:{'battery_type_index':battery_types_index},
-        success:function(res){
+        $('#weather_widget_display_status').change(function () {
+            var status = $(this).is(':checked')
+            $.ajax({
+                url: "/set_weather_widget_display_status",
+                data: { 'status': status },
+                success: function (res) {
 
-        }
-    })
-})
-$('#emergency_shut').change(function(){
-    var emergency_shut_index = $('#emergency_shut').val()
-    $.ajax({
-        url:"/set_emergency_shut",
-        data:{'emergency_shut_index': emergency_shut_index},
-        success: function(res) {
+                }
+            })
+        })
 
-        }
-    })
-})
+        $('#battery_types').change(function () {
+            var battery_types_index = $('#battery_types').val()
+            $.ajax({
+                url: "/set_battery_type",
+                data: { 'battery_type_index': battery_types_index },
+                success: function (res) {
 
-$('#fine_tune').change(function(){
-    var fine_tune = $('#fine_tune').val()
-    $.ajax({
-        url:"/set_fine_tune",
-        data:{'fine_tune': fine_tune},
-        success: function(res){
+                }
+            })
+        })
+        $('#emergency_shut').change(function () {
+            var emergency_shut_index = $('#emergency_shut').val()
+            $.ajax({
+                url: "/set_emergency_shut",
+                data: { 'emergency_shut_index': emergency_shut_index },
+                success: function (res) {
 
-        }
-    })
-})
-</script>
-{% endblock content %}
+                }
+            })
+        })
+
+        $('#fine_tune').change(function () {
+            var fine_tune = $('#fine_tune').val()
+            $.ajax({
+                url: "/set_fine_tune",
+                data: { 'fine_tune': fine_tune },
+                success: function (res) {
+
+                }
+            })
+        })
+    </script>
+    {% endblock content %}

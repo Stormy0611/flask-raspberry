@@ -77,9 +77,9 @@ class ConfigFileReader():
         self.file_path = None
         path_options = [
             # os.path.join(os.getcwd(), 'config.json') ,
-            os.path.join('home/pi/savvyvan',
+            os.path.join('F:/ControlPanel_lite/savvyvan',
                          'proj', 'webapp', 'config.json'),
-            os.path.join('home/pi/savvyvan',
+            os.path.join('F:/ControlPanel_lite/savvyvan',
                          'proj', 'webapp', 'config.json'),
             os.path.join(os.getcwd(), 'webapp', 'config.json'),
             os.path.join(os.getcwd(), 'config.json'),

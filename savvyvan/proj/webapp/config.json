@@ -1,5 +1,5 @@
 {
-    "base_folder_path": "/home/pi/savvyvan",
+    "base_folder_path": "F:/ControlPanel_lite/savvyvan/",
     "settings_page_text_file_path": "message.txt",
     "battery_file_path": "readings/voltage.txt",
     "battery_graph_file_path": "readings/voltage_graph.txt",
@@ -25,7 +25,7 @@
     "fine_tune": 0.2,
     "email": "",
     "notification_file": "notification.txt",
-    "notification_file_modify_time": "Tue Jun 28 22:12:45 2022",
+    "notification_file_modify_time": "Fri Sep 16 16:00:48 2022",
     "battery_types": [
         {
             "name": "AGM",
