@@ -22,7 +22,7 @@
     "current_battery_level": 12.37,
     "current_emergency_shut": 3,
     "emergency_shut_flag": 0,
-    "fine_tune": 0.4,
+    "fine_tune": 0.2,
     "email": "",
     "notification_file": "notification.txt",
     "notification_file_modify_time": "Fri Sep 16 06:00:48 2022",
@@ -230,7 +230,7 @@
             "tile_name": "",
             "tile_icon": "begin_config.png",
             "tile_file_mapping": "RelayGPIO100.py",
-            "is_active_tile": 1
+            "is_active_tile": 0
         },
         {
             "tile_id": "tile_5",

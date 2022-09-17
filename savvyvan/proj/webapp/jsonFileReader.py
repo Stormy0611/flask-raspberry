@@ -74,28 +74,38 @@ def getHalfwayColor(c1, c2):
 
 class ConfigFileReader():
     def __init__(self):
-        self.file_path = None
-        path_options = [
-            # os.path.join(os.getcwd(), 'config.json') ,
-            os.path.join('F:/ControlPanel_lite/savvyvan',
-                         'proj', 'webapp', 'config.json'),
-            os.path.join('F:/ControlPanel_lite/savvyvan',
-                         'proj', 'webapp', 'config.json'),
-            os.path.join(os.getcwd(), 'webapp', 'config.json'),
-            os.path.join(os.getcwd(), 'config.json'),
-        ]
+        self.file_path = os.getcwd() + '/config.json'
+        # path_options = [
+        #     # os.path.join(os.getcwd(), 'config.json') ,
+        #     os.path.join('E:/2022_09_flask_raspberry/savvyvan',
+        #                  'proj', 'webapp', 'config.json'),
+        #     os.path.join('E:/2022_09_flask_raspberry/savvyvan',
+        #                  'proj', 'webapp', 'config.json'),
+        #     os.path.join(os.getcwd(), 'webapp', 'config.json'),
+        #     os.path.join(os.getcwd(), 'config.json'),
+        # ]
+        # self.file_path = os.getcwd() + '/config.json'
         # print(path_options)
-        for path in path_options:
-            if os.path.exists(path):
-                self.file_path = path
-            else:
-                pass
+        # for path in path_options:
+        #     if os.path.exists(path):
+        #         self.file_path = path
+        #     else:
+        #         pass
                 # print("* Path Not Found")
 
         self.data = self.readFile()
 
     def readFile(self):
-        return json.loads(open(self.file_path, 'r', encoding="utf-8").read())
+            # print(self.file_path)
+        # try:
+            file = open(self.file_path, 'r')
+            json_cont = json.load(file)
+            # print(json_cont)
+            file.close()
+            return json_cont
+        # except Exception as err:
+        #     print(err)
+        #     return {}
 
     def updateDataFile(self, new_data):
         with open(self.file_path, 'w') as f:

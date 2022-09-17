@@ -80,7 +80,11 @@ def save_color_value():
     }
 
     # print(color_values)
-    reader = ConfigFileReader()
+    try:
+        reader = ConfigFileReader()
+    except Exception as err:
+        print(err)
+        return jsonify({})
     reader.setBackgroundColor(new_colors=color_values)
     return jsonify({})
 
@@ -91,7 +95,11 @@ def save_tile_info():
     # tile_icon = request.args.get('tile_icon')
     tile_name = request.args.get('tile_name')
     # tile_file_mapping = request.args.get('tile_file_mapping')
-    reader = ConfigFileReader()
+    try:
+        reader = ConfigFileReader()
+    except Exception as err:
+        print(err)
+        return jsonify({'tile_icon': ""})
     tile_icon = reader.getSpecificTileIcon(tile_name)
     reader.setTileIcon(index=index, file_name=tile_icon)
     reader.setTileName(index=index, tile_name=tile_name)
@@ -106,7 +114,11 @@ def save_tile_info():
 @app.route("/save_total_title_to_display")
 def save_total_title_to_display():
     total_title_to_display = request.args.get('total_title_to_display')
-    reader = ConfigFileReader()
+    try:
+        reader = ConfigFileReader()
+    except Exception as err:
+        print(err)
+        return jsonify({})
     reader.setTotalTilesToDisplay(new_count=total_title_to_display)
     return jsonify({})
 
@@ -115,7 +127,11 @@ def save_total_title_to_display():
 def save_geo_location_city():
     city = request.args.get('city')
     print('city:', city)
-    reader = ConfigFileReader()
+    try:
+        reader = ConfigFileReader()
+    except Exception as err:
+        print(err)
+        return jsonify({})
     reader.set_geo_location_city(city=city)
 
     # call weather function to get lat lon and weather info
@@ -127,7 +143,11 @@ def save_geo_location_city():
 @app.route("/settings-page")
 def settings_page():
     data = {}
-    reader = ConfigFileReader()
+    try:
+        reader = ConfigFileReader()
+    except Exception as err:
+        print(err)
+        return jsonify({})
     # deleted_item
     data['weather_widget_display_status'] = reader.get_weather_widget_display_status()
     data['tilesList'] = reader.getTilesListing()
@@ -150,7 +170,11 @@ def settings_page():
 
 @app.route("/load_notification")
 def load_notification():
-    reader = ConfigFileReader()
+    try:
+        reader = ConfigFileReader()
+    except Exception as err:
+        print(err)
+        return jsonify({})
     file_path = reader.getNotificationFilePath()
     new_mtime = time.ctime(os.path.getmtime(file_path))
     mod_time = reader.getNotificationFileModifyTime()
@@ -167,7 +191,11 @@ def load_notification():
 @app.route("/title-page")
 def title_page():
     data = {}
-    reader = ConfigFileReader()
+    try:
+        reader = ConfigFileReader()
+    except Exception as err:
+        print(err)
+        return jsonify({})
     data['tile_colors'] = reader.getTilesBackgroundColorClasses()
     data['battery_tile_display_status'] = reader.getBatteryTileDisplayStatus()
     data['battery_types'] = reader.getBatteryTypes()
@@ -184,7 +212,11 @@ def title_page():
 @app.route("/add_email")
 def add_email():
     email = request.args.get('email')
-    reader = ConfigFileReader()
+    try:
+        reader = ConfigFileReader()
+    except Exception as err:
+        print(err)
+        return jsonify({})
     reader.setEmail(email=email)
     return jsonify({})
 
@@ -192,7 +224,11 @@ def add_email():
 @app.route("/wifi-settings-page")
 def wifi_settings_page():
     data = {}
-    reader = ConfigFileReader()
+    try:
+        reader = ConfigFileReader()
+    except Exception as err:
+        print(err)
+        return jsonify({})
     data['menu_python_files'] = reader.getMenuPythonFiles()
     data['tile_colors'] = reader.getTilesBackgroundColorClasses()
     data['notification'] = reader.getNotification()
@@ -203,7 +239,11 @@ def wifi_settings_page():
 
 @app.route("/set_battery_tile_display_status")
 def set_battery_tile_display_status():
-    reader = ConfigFileReader()
+    try:
+        reader = ConfigFileReader()
+    except Exception as err:
+        print(err)
+        return jsonify({})
     status = request.args.get('status')
     reader.setBatteryTileDisplayStatus(status)
     # print(status)
@@ -212,7 +252,11 @@ def set_battery_tile_display_status():
 
 @app.route('/set_battery_type')
 def set_battery_types():
-    reader = ConfigFileReader()
+    try:
+        reader = ConfigFileReader()
+    except Exception as err:
+        print(err)
+        return jsonify({})
     battery_type_index = request.args.get('battery_type_index')
     reader.setBatteryType(current_index=battery_type_index)
     return jsonify({})
@@ -220,7 +264,11 @@ def set_battery_types():
 
 @app.route('/run_emergency_shut')
 def run_emergency_shut():
-    reader = ConfigFileReader()
+    try:
+        reader = ConfigFileReader()
+    except Exception as err:
+        print(err)
+        return jsonify({})
     flag = False
     flash_value = reader.getBatteryFlashValue()
     current_voltage = reader.getCurrentBatteryLevel()
@@ -250,7 +298,11 @@ def run_emergency_shut():
 
 @app.route('/set_emergency_shut')
 def set_emergency_shut():
-    reader = ConfigFileReader()
+    try:
+        reader = ConfigFileReader()
+    except Exception as err:
+        print(err)
+        return jsonify({})
     emergency_shut_index = request.args.get('emergency_shut_index')
     reader.setCurrentEmergencyShut(current_index=emergency_shut_index)
     return jsonify({})
@@ -258,7 +310,11 @@ def set_emergency_shut():
 
 @app.route('/set_fine_tune')
 def set_fine_tune():
-    reader = ConfigFileReader()
+    try:
+        reader = ConfigFileReader()
+    except Exception as err:
+        print(err)
+        return jsonify({})
     fine_tune = request.args.get('fine_tune')
     reader.setFineTune(fine_tune=fine_tune)
     return jsonify({})
@@ -266,7 +322,11 @@ def set_fine_tune():
 
 @app.route("/set_weather_widget_display_status")
 def set_weather_widget_display_status():
-    reader = ConfigFileReader()
+    try:
+        reader = ConfigFileReader()
+    except Exception as err:
+        print(err)
+        return jsonify({})
     status = request.args.get('status')
     reader.set_weather_widget_display_status(status)
     # print(status)
@@ -295,7 +355,11 @@ def save_netwrok():
 
 @app.route("/get_weather_data")
 def get_weather_data():
-    reader = ConfigFileReader()
+    try:
+        reader = ConfigFileReader()
+    except Exception as err:
+        print(err)
+        return jsonify({'weather_data': ""})
     weather_data = reader.get_weather_data()
     return jsonify({'weather_data': weather_data})
 
@@ -304,7 +368,11 @@ def get_weather_data():
 def get_data():
     print('get_data')
     data = dict()
-    reader = ConfigFileReader()
+    try:
+        reader = ConfigFileReader()
+    except Exception as err:
+        print(err)
+        return jsonify({})
     data['weather_widget_display_status'] = reader.get_weather_widget_display_status()
     data['battery_level'] = get_battery_level().json['battery_level']
     data['battery_color'] = get_battery_level().json['battery_color']
@@ -411,7 +479,11 @@ def run_mapped_python_file():
 
 @app.route("/get_tiles_states")
 def get_tiles_states():
-    reader = ConfigFileReader()
+    try:
+        reader = ConfigFileReader()
+    except Exception as err:
+        print(err)
+        return jsonify({'states': {}})
     stat_folder = reader.getGPIOStatFolderPath()
     data = json.loads(request.args.get('data'))
 
@@ -428,7 +500,11 @@ def get_tiles_states():
 
 @app.route("/get_battery_level")
 def get_battery_level():
-    reader = ConfigFileReader()
+    try:
+        reader = ConfigFileReader()
+    except Exception as err:
+        print(err)
+        return jsonify({'battery_level': 0, "battery_color": ""})
     battery_level = 0
     battery_color = None
     battery_level_file_path = reader.getBatteryDataFilePath()
@@ -447,7 +523,14 @@ def get_battery_level():
 
 @app.route("/get_battery_tile_chart_data")
 def get_battery_tile_chart_data():
-    reader = ConfigFileReader()
+    try:
+        reader = ConfigFileReader()
+    except Exception as err:
+        print(err)
+        return jsonify({'data': {
+            "labels": "",
+            "dataset": 0
+        }})
     data = reader.getChartData()
     return jsonify({'data': data})
 
@@ -455,7 +538,11 @@ def get_battery_tile_chart_data():
 @app.route("/wifi_settings_page_run_py_file")
 def wifi_settings_page_run_py_file():
     flash('Changes Commited')
-    reader = ConfigFileReader()
+    try:
+        reader = ConfigFileReader()
+    except Exception as err:
+        print(err)
+        return jsonify({})
     path = reader.get_wifi_settings_page_run_py_file()
     print("-> Running python file = ", path)
     try:
