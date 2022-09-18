@@ -23,22 +23,22 @@ except:
 
 # for city based weather
 def weatherFunction():
-    reader = ConfigFileReader()
-    print("-> Calling get_weather_data()")
-    api_key  = reader.get_weather_data_api_key()
-    city = reader.get_geo_location_city()
-    print("-> Current city = ",city)
-    api_key = reader.get_weather_data_api_key()
-    # url  = f'https://api.openweathermap.org/data/2.5/forecast/daily?q={city}&cnt=5&appid={api_key}'
-    # url  = f'https://api.openweathermap.org/data/2.5/forecast/daily?q=London&units=metric&cnt=7&appid={api_key}'
-    url  = f'https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={api_key}&units=metric'
-    print("Weather API Response ")
     try:
+        reader = ConfigFileReader()
+        print("-> Calling get_weather_data()")
+        api_key  = reader.get_weather_data_api_key()
+        city = reader.get_geo_location_city()
+        print("-> Current city = ", city)
+        api_key = reader.get_weather_data_api_key()
+        # url  = f'https://api.openweathermap.org/data/2.5/forecast/daily?q={city}&cnt=5&appid={api_key}'
+        # url  = f'https://api.openweathermap.org/data/2.5/forecast/daily?q=London&units=metric&cnt=7&appid={api_key}'
+        url  = f'https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={api_key}&units=metric'
+        print("Weather API Response ")
         weather_data = requests.get(url).json()
         print(weather_data) 
         reader.set_weather_data(weather_data) 
     except Exception as e:
-        print('Error getting weather data',str(e))
+        print('Error getting weather data', str(e))
     
     
 if __name__=="__main__"    :
