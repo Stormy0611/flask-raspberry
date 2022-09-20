@@ -1,3 +1,12 @@
+#Standard Config for all Scripts
+import logging
+from datetime import datetime
+#now = str(datetime.datetime.now())
+logging.basicConfig(filename='/home/pi/logs/debug.log', level=logging.DEBUG)
+#logging.info(str(datetime.now()) + " " )
+logging.info(str(datetime.now()) + " Voltage Service Started " )
+#-----------------------
+
 import RPi.GPIO as GPIO
 import time
 from datetime import datetime
@@ -22,7 +31,7 @@ Volt_list = []
 Volt_read = []
 
 Graph_repeat=120
-Read_repeat=5
+Read_repeat=10
 
 
 
@@ -88,9 +97,10 @@ def main():
                                 Voltage=readadc(mq7_apin, SPICLK, SPIMOSI, SPIMISO, SPICS)
                                 VoltageOutput=(Voltage*(3.3/1024)*5.05)
                                 Volt_read.append(VoltageOutput) #append volt_read list
-                                time.sleep(1)
+                                time.sleep(0.5)
                          Voltage = statistics.mean(Volt_read) #store average of list
                          Voltage = float(Voltage)+float(volt_modifier)
+                         #Voltage = float(Voltage)+float(10)
                          Voltage = (round(Voltage, 1)) #round to 1 decimal places
                          Volt_read.clear() # clear list
                         
@@ -132,7 +142,8 @@ def main():
                          with open('../emailadd.txt') as f:
                                  receiver = f.read()
                          sender = "notifications@savvyvan.co.uk"
-                         print(receiver)
+                         #print(receiver)
+                         logging.info(str(datetime.now()) + " " + receiver)
 
                          msg = MIMEText('Dear User\n\nYour battery voltage is ' + str(Voltage_graph_round) + 'v\n\nPlease consult your battery product manual to resolve this error\n\nThankyou\n\nSavvyVan\nSupport@SavvyVan.co.uk\nhttps://www.savvyvan.co.uk\n\n\nPlease do not reply, this mailbox is unmonitored')
 
@@ -148,7 +159,8 @@ def main():
 
                                 server.login(user, password)
                                 server.sendmail(sender, receiver, msg.as_string())
-                                print('Mail Sent - Low Voltage Alert! ' + str(Voltage_graph_round) + 'v')
+                                #print('Mail Sent - Low Voltage Alert! ' + str(Voltage_graph_round) + 'v')
+                         logging.info(str(datetime.now()) + ' Mail Sent - Low Voltage Alert! ' + str(Voltage_graph_round) + 'v')
                         
 
 
