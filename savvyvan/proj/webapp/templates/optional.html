@@ -84,7 +84,7 @@
                 </select>
       
 
-            <!-- This is fine tune value -->
+                <!-- This is fine tune value -->
                 <span>Fine Tune Voltage</span>
                 <select  id="fine_tune" class="browser-default tooltipped" data-position = "top" data-tooltip = "Select a value to fine tune your battery voltage reading"  style="width:70px; margin-left: 5px;">
                     {% for x in range(-5,6,1) %}
@@ -94,6 +94,31 @@
                         <option value="{{ x / 10 }}">{{x / 10}}</option>
                     {% endif %}
                         
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="inline">
+                <!-- Emergency shut checkbox -->
+                <div>
+                    <label class="tooltipped" data-position = "top" data-tooltip = "">
+                        {% if data.emergency_shut %}
+                        <input id="emergency_shut_check"  type="checkbox" class="filled-in" checked="checked"/>
+                        {% else %}
+                        <input id="emergency_shut_check"  type="checkbox" class="filled-in" />
+                        {% endif %}
+                        <span class="emergency_text">Emergency Shut on Low Voltage</span>
+                    </label>
+                </div>
+                <!-- Emergency action option -->
+                <select  id="emergency_option" class="browser-default tooltipped" data-position = "top" data-tooltip = "Select your action" style="width:110px; margin-left: 5px;">
+                    {% for opt in data.emergency_shut_options %}
+                    {% if data.emergency_shut_active == opt %}
+                        <option selected>{{opt}}</option>
+                    {% else %}
+                        <option>{{opt}}</option>
+                    {% endif %}
+
                     {% endfor %}
                 </select>
             </div>
@@ -129,6 +154,20 @@
                 </label>
             </div>
         </div>
+        <!-- Customisation  -->
+        {% if data.is_customisation %}
+        <div class="row" style="margin-top: 10px;">
+            <div class="col s4">
+                <h6>Customisation ID</h6>
+            </div>
+            <div class="input-field col s6">
+                <input id="custom-id" type="text" class="virtual-keyboard validate" data-kioskboard-type="all" data-kioskboard-specialcharacters="true" style="background-color: white; border-radius:2px; height: 34px;" value="">
+            </div>
+            <div class="col s2" style="padding-right: 0px; padding-left: 0px;">
+                <button style="margin-top: 14px;width: 100%;" id="custom-id-btn" onclick="addCustomID()" class="btn right {{data.tile_colors.0}} {{data.tile_colors.2}}"><span class="enlarge_text">Add</span></button>
+            </div>
+        </div>
+        {% endif %}
     </div>
 </div>
 
@@ -136,6 +175,18 @@
 $(document).ready(function(){
     $('.tooltipped').tooltip();
 });
+function addCustomID() {
+    var custom_id = $('#custom-id').val()
+    $.ajax({
+            url:"/add_custom_id",
+            data:{
+                "custom-id": custom_id
+            },
+            success: function(res){
+
+            }
+        })
+}
 $('#battery_tile_display_status').change(function(){
     var status = $(this).is(':checked')
     $.ajax({
@@ -196,5 +247,28 @@ $('#fine_tune').change(function(){
         }
     })
 })
+
+$('#emergency_option').change(function () {
+    var emergency_action = $('#emergency_option').val()
+    $.ajax({
+        url:"/set_emergency_shut_action",
+        data:{'emergency_action': emergency_action},
+        success: function(res){
+
+        }
+    })
+})
+
+$('#emergency_shut_check').change(function () {
+    var status = $(this).is(':checked')
+    $.ajax({
+        url:"/set_emergency_shut",
+        data:{'is_emergency_shut': status},
+        success: function(res){
+
+        }
+    })
+})
+
 </script>
 {% endblock content %}

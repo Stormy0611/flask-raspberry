@@ -72,7 +72,7 @@ def getHalfwayColor(c1,c2):
 
 class ConfigFileReader():
     def __init__(self):
-        self.file_path =  None
+        self.file_path = None
         path_options = [
             # os.path.join(os.getcwd(), 'config.json') ,
             os.path.join('home/pi/savvyvan', 'proj','webapp', 'config.json') ,
@@ -89,14 +89,30 @@ class ConfigFileReader():
                 # print("* Path Not Found")
         
         self.data = self.readFile()
+
     def readFile(self):
-        
-        return json.loads(open(self.file_path, 'r', encoding="utf-8").read() ) 
+        return json.loads(open(self.file_path, 'r', encoding="utf-8").read())
+
     def updateDataFile(self, new_data):
         with open(self.file_path, 'w') as f:
             json.dump(new_data, f, ensure_ascii=False, indent=4)
-        
-        
+
+    def set_custom_id(self, custom_id: str):
+        self.data['customisation_id'] = custom_id
+        self.updateDataFile(self.data)
+
+    def get_custom_id(self):
+        return self.data['customisation_id']
+
+    def set_is_customisation(self, flag: int):
+        self.data['is_customisation'] = flag
+        self.updateDataFile(self.data)
+
+    def get_is_customisation(self):
+        return self.data['is_customisation']
+
+    def get_data(self):
+        return self.data
 
     def getBaseFolderPath(self):
         base_folder_path = self.data['base_folder_path'].encode('unicode_escape').decode() 
@@ -415,7 +431,7 @@ class ConfigFileReader():
     def get_geo_location_city(self):
         return self.data['geo_location_city']
             
-    def set_geo_location_city(self,city ):
+    def set_geo_location_city(self, city):
         self.data['geo_location_city'] = city
         self.updateDataFile(self.data)
             
@@ -423,10 +439,26 @@ class ConfigFileReader():
         path = os.path.join(self.getBaseFolderPath(),self.data['wifi_settings_page_run_py_file']).encode('unicode_escape').decode()  
         # return self.data['wifi_settings_page_run_py_file']
         return path
-            
-            
-            
-            
+
+    def get_emergency_shut_options(self):
+        return self.data['emergency_shut_options']
+
+    def get_emergency_shut_active(self):
+        return self.data['emergency_shut_active']
+
+    def set_emergency_shut_active(self, current: str):
+        self.data['emergency_shut_active'] = current
+        self.updateDataFile(self.data)
+    def get_emergency_shut(self):
+        return self.data['emergency_shut']
+
+    def set_emergency_shut(self, status: int):
+        self.data['emergency_shut'] = status
+        self.updateDataFile(self.data)
+
+    def get_emergency_shut_frequency(self):
+        return self.data['emergency_shut_frequency']
+
     def generateBatteryLevel(self, battery_level): 
         
         min_max = [x['measure'] for x in BATTERY_THRESHOLDS[self.data['current_battery_index']]]

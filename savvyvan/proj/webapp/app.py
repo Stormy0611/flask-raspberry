@@ -15,18 +15,24 @@ import time
 sys.path.append(os.path.join(os.path.dirname(__file__), ''))
 try:
     from . import config
-    from .jsonFileReader import ConfigFileReader,WPA_Supplicant_Reader
+    from .jsonFileReader import ConfigFileReader, WPA_Supplicant_Reader
     from . import weather
 except:
     import config
-    from jsonFileReader import ConfigFileReader,WPA_Supplicant_Reader
+    from jsonFileReader import ConfigFileReader, WPA_Supplicant_Reader
     import weather
     pass
      
-import json,requests
+import json, requests
+import threading
+from scripts.alltiles import run_function
 
 
-
+configuration = ConfigFileReader()
+configuration.set_emergency_shut(0)
+configuration.set_emergency_shut_active("")
+is_emergency_shut = 0
+emergency_shut_frequency = int(configuration.get_emergency_shut_frequency())
 
 
 app = Flask(__name__)
@@ -179,7 +185,19 @@ def title_page():
     data['weather_widget_display_status'] = reader.get_weather_widget_display_status()
     data['email_value'] = reader.getEmail()
     data['notification'] = reader.getNotification()
+    data['emergency_shut'] = reader.get_emergency_shut()
+    data['emergency_shut_options'] = reader.get_emergency_shut_options()
+    data['emergency_shut_active'] = reader.get_emergency_shut_active()
+    data['customisation_id'] = reader.get_custom_id()
+    data['is_customisation'] = reader.get_is_customisation()
     return render_template("/optional.html", data = data)
+
+@app.route("/add_custom_id")
+def add_custom_id():
+    custom_id = request.args.get('custom-id')
+    reader = ConfigFileReader()
+    reader.set_custom_id(custom_id)
+    return jsonify({})
 
 @app.route("/add_email")
 def add_email():
@@ -200,7 +218,29 @@ def wifi_settings_page():
     return render_template("wifi_settings.html",data = data)
 
 
+@app.route("/set_emergency_shut_action")
+def set_emergency_shut_action():
+    reader = ConfigFileReader()
+    active = request.args.get('emergency_action')
+    reader.set_emergency_shut_active(active)
+    # print(status)
+    return jsonify({})
 
+@app.route("/set_emergency_shut")
+def set_emergency_shut():
+    reader = ConfigFileReader()
+    status = request.args.get('is_emergency_shut')
+    # print(type(status))
+    global is_emergency_shut
+    if 'true' in status:
+        reader.set_emergency_shut(1)
+        is_emergency_shut = 1
+    else:
+        reader.set_emergency_shut(0)
+        is_emergency_shut = 0
+    # print(status)
+    # print(is_emergency_shut)
+    return jsonify({})
 
 @app.route("/set_battery_tile_display_status")
 def set_battery_tile_display_status():  
@@ -495,9 +535,24 @@ def add_header(r):
     r.headers["Cache-Control"] = "public, max-age=0"
     return r
 
+class myThread(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+
+    def run(self):
+        while True:
+            global is_emergency_shut, emergency_shut_frequency
+            if is_emergency_shut:
+                run_function()
+                time.sleep(emergency_shut_frequency)
+            else:
+                pass
+
+thread = myThread()
+thread.start()
 
 def main():
-    app.run(host="localhost", port=3001,debug=True)
+    app.run(host="localhost", port=3001, debug=True, use_reloader=False)
 
 
 if __name__ == "__main__":

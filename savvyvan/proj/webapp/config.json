@@ -1,5 +1,17 @@
 {
-    "base_folder_path": "/home/pi/savvyvan",
+    "is_customisation": 1,
+    "customisation_id": "EEEEEEEERDDXFYYYTGGGGFF",
+    "emergency_shut_options": [
+        "",
+        "All Tiles",
+        "Tile 1 only",
+        "Tile 2-8"
+    ],
+    "emergency_shut_active": "",
+    "emergency_shut": 0,
+    "emergency_shut_script_location": "scripts/alltiles.py",
+    "emergency_shut_frequency": 10,
+    "base_folder_path": "E:\\2022_09_flask_raspberry\\savvyvan",
     "settings_page_text_file_path": "message.txt",
     "battery_file_path": "readings/voltage.txt",
     "battery_graph_file_path": "readings/voltage_graph.txt",
@@ -22,7 +34,7 @@
     "fine_tune": 0.0,
     "email": "",
     "notification_file": "notification.txt",
-    "notification_file_modify_time": "Tue Sep 20 11:42:59 2022",
+    "notification_file_modify_time": "Tue Sep 20 05:08:10 2022",
     "battery_types": [
         {
             "name": "AGM",
@@ -169,7 +181,7 @@
         "RelayGPIO21.py"
     ],
     "tile_bg_class": "teal",
-    "battery_tile_display_status": "False",
+    "battery_tile_display_status": "True",
     "tile_shade_1": "Default",
     "tile_shade_2": "Default",
     "background_color": {
@@ -187,7 +199,7 @@
             "tile_name": "",
             "tile_icon": "Profile_transparent_small.png",
             "tile_file_mapping": "RelayGPIO25.py",
-            "is_active_tile": 0
+            "is_active_tile": 1
         },
         {
             "tile_id": "tile_2",
