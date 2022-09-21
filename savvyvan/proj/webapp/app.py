@@ -13,6 +13,7 @@ import os.path
 import sys
 import time
 sys.path.append(os.path.join(os.path.dirname(__file__), ''))
+sys.path.append('../../scripts')
 try:
     from . import config
     from .jsonFileReader import ConfigFileReader, WPA_Supplicant_Reader
@@ -25,8 +26,8 @@ except:
      
 import json, requests
 import threading
+# from scripts.alltiles import run_function
 from scripts.alltiles import run_function
-
 
 configuration = ConfigFileReader()
 configuration.set_emergency_shut(0)
